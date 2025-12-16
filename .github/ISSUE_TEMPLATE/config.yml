@@ -1,0 +1,5 @@
+blank_issues_enabled: false
+contact_links:
+  - name: Live Tool
+    url: https://provablyfairbasketball.com/
+    about: Use the live tool here. This repo is a source mirror.
