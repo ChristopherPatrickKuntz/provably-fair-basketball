@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { useSearchParams } from 'react-router-dom';
 import { Header } from './Header';
 import { 
   NEW_COACH_GUIDE, 
@@ -14,64 +15,94 @@ import {
   PROGRESSION_GUIDES
 } from '../data/coachingResources';
 
+const GUIDE_SECTIONS = [
+  { id: 'guide', icon: '🧭', title: 'The Essentials', description: 'Mindset, your first practice, communication, and game day.' },
+  { id: 'basics', icon: '📖', title: 'Basketball Basics', description: 'Rules, fouls, ball size, and key terms, in plain language.' },
+  { id: 'ltad', icon: '📈', title: 'Player Development', description: 'Coach the stage, not the age. What to expect by age.' },
+  { id: 'templates', icon: '💬', title: 'Parent Emails', description: 'Copy-paste messages for the common conversations.' },
+  { id: 'checklists', icon: '✅', title: 'Checklists', description: 'Pre-season, practice bag, game day, and first aid.' },
+  { id: 'traps', icon: '🚧', title: 'Pitfalls to Avoid', description: 'Common shortcuts that backfire. Read if you want, no pressure.' },
+  { id: 'links', icon: '🔗', title: 'Helpful Links', description: 'Trusted sites for drills, rules, and safety.' },
+];
+
 export function NewCoachGuideScreen({ onBack }) {
-  const [activeTab, setActiveTab] = useState('guide');
+  const [searchParams] = useSearchParams();
+  const [selectedSection, setSelectedSection] = useState(() => {
+    const s = searchParams.get('section');
+    return GUIDE_SECTIONS.some((x) => x.id === s) ? s : null;
+  });
   const [expandedSection, setExpandedSection] = useState(null);
 
-  return (
-    <div className="min-h-screen bg-[var(--bg-page)] flex flex-col">
-      <Header 
-        title="Coach's Guide" 
-        leftAction={onBack}
-        leftLabel="← Back"
-      />
+  const section = GUIDE_SECTIONS.find((s) => s.id === selectedSection);
 
-      {/* Tab Bar */}
-      <div className="bg-[var(--bg-card)] px-2 py-2 shadow-[var(--shadow-card)] overflow-x-auto">
-        <div className="max-w-lg mx-auto flex gap-1 min-w-max">
-          {[
-            { id: 'guide', label: 'Guide' },
-            { id: 'traps', label: '⚠️ Traps' },
-            { id: 'ltad', label: 'Development' },
-            { id: 'templates', label: 'Templates' },
-            { id: 'checklists', label: 'Checklists' },
-            { id: 'links', label: 'Links' }
-          ].map(tab => (
-            <button
-              key={tab.id}
-              onClick={() => setActiveTab(tab.id)}
-              className={`px-3 py-2 rounded-[8px] text-[13px] font-medium whitespace-nowrap transition-all ${
-                activeTab === tab.id 
-                  ? 'bg-[var(--accent)] text-white' 
-                  : 'text-[var(--text-secondary)]'
-              }`}
-            >
-              {tab.label}
-            </button>
-          ))}
+  // Detail view: one section's content, with a back button to the section list.
+  if (section) {
+    return (
+      <div className="min-h-screen bg-[var(--bg-page)] flex flex-col">
+        <Header
+          title={section.title}
+          leftAction={() => setSelectedSection(null)}
+          leftLabel="← Guide"
+        />
+        <div className="flex-1 overflow-y-auto">
+          {section.id === 'guide' && (
+            <GuideTab expandedSection={expandedSection} setExpandedSection={setExpandedSection} />
+          )}
+          {section.id === 'basics' && <TipsTab />}
+          {section.id === 'traps' && <TrapsTab />}
+          {section.id === 'ltad' && <LTADTab />}
+          {section.id === 'templates' && <TemplatesTab />}
+          {section.id === 'checklists' && <ChecklistsTab />}
+          {section.id === 'links' && <LinksTab />}
         </div>
       </div>
+    );
+  }
 
+  // Section list: vertical and fully visible, essentials first, no horizontal scrolling.
+  return (
+    <div className="min-h-screen bg-[var(--bg-page)] flex flex-col">
+      <Header
+        title="Coach's Guide"
+        leftAction={onBack}
+        leftLabel="← Handbook"
+      />
       <div className="flex-1 overflow-y-auto">
-        {activeTab === 'guide' && (
-          <GuideTab 
-            expandedSection={expandedSection} 
-            setExpandedSection={setExpandedSection} 
-          />
-        )}
-        {activeTab === 'traps' && <TrapsTab />}
-        {activeTab === 'ltad' && <LTADTab />}
-        {activeTab === 'templates' && <TemplatesTab />}
-        {activeTab === 'checklists' && <ChecklistsTab />}
-        {activeTab === 'links' && <LinksTab />}
+        <div className="max-w-md mx-auto px-5 py-6">
+          <p className="text-[14px] text-[var(--text-secondary)] mb-5 px-1">
+            Everything a new coach needs, one topic at a time. Start at the top, the rest is here when you want it.
+          </p>
+          <div className="space-y-3">
+            {GUIDE_SECTIONS.map((s) => (
+              <button
+                key={s.id}
+                onClick={() => setSelectedSection(s.id)}
+                className="w-full text-left rounded-[var(--radius)] p-4 flex items-center gap-4 bg-[var(--bg-card)] shadow-[var(--shadow-card)] transition-all active:scale-[0.98]"
+              >
+                <div className="w-12 h-12 rounded-[12px] bg-[var(--bg-secondary)] flex items-center justify-center text-2xl flex-shrink-0">
+                  {s.icon}
+                </div>
+                <div className="flex-1">
+                  <span className="text-[17px] font-semibold text-[var(--text-primary)]">{s.title}</span>
+                  <p className="text-[13px] text-[var(--text-muted)] mt-0.5">{s.description}</p>
+                </div>
+                <svg className="w-5 h-5 text-[var(--text-muted)] flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                </svg>
+              </button>
+            ))}
+          </div>
+        </div>
       </div>
     </div>
   );
 }
 
+// Pick one motivational quote per page load (stable across re-renders)
+const GUIDE_QUOTE = MOTIVATIONAL_QUOTES[Math.floor(Math.random() * MOTIVATIONAL_QUOTES.length)];
+
 function GuideTab({ expandedSection, setExpandedSection }) {
-  // Random motivational quote
-  const quote = MOTIVATIONAL_QUOTES[Math.floor(Math.random() * MOTIVATIONAL_QUOTES.length)];
+  const quote = GUIDE_QUOTE;
 
   return (
     <div className="px-4 py-5">
@@ -85,7 +116,7 @@ function GuideTab({ expandedSection, setExpandedSection }) {
         {/* Quote of the Day */}
         <div className="bg-[var(--bg-card)] rounded-[var(--radius)] shadow-[var(--shadow-card)] p-4 mb-6">
           <p className="text-[14px] text-[var(--text-primary)] italic mb-2">"{quote.quote}"</p>
-          <p className="text-[12px] text-[var(--accent)] font-medium">— {quote.author}</p>
+          <p className="text-[12px] text-[var(--accent)] font-medium"> - {quote.author}</p>
         </div>
 
         {/* Sections */}
@@ -171,6 +202,10 @@ function ContentItem({ item }) {
 
 function LTADTab() {
   const [selectedStage, setSelectedStage] = useState('learn-to-train');
+  const [showAll, setShowAll] = useState(false);
+  const shownStages = showAll
+    ? LTAD_STAGES
+    : LTAD_STAGES.filter((s) => ['active-start', 'fundamentals', 'learn-to-train', 'train-to-train'].includes(s.id));
 
   return (
     <div className="px-4 py-5">
@@ -185,8 +220,8 @@ function LTADTab() {
         </div>
 
         {/* Stage Selector */}
-        <div className="flex gap-2 overflow-x-auto pb-2 mb-4">
-          {LTAD_STAGES.map(stage => (
+        <div className="flex flex-wrap gap-2 pb-2 mb-2">
+          {shownStages.map(stage => (
             <button
               key={stage.id}
               onClick={() => setSelectedStage(stage.id)}
@@ -200,6 +235,12 @@ function LTADTab() {
             </button>
           ))}
         </div>
+        <button
+          onClick={() => setShowAll(!showAll)}
+          className="text-[12px] text-[var(--accent)] font-medium mb-4"
+        >
+          {showAll ? 'Show fewer stages' : 'Show all stages (older / elite)'}
+        </button>
 
         {/* Selected Stage Details */}
         {LTAD_STAGES.filter(s => s.id === selectedStage).map(stage => (
@@ -256,18 +297,28 @@ function LTADTab() {
 
 function TemplatesTab() {
   const [selectedTemplate, setSelectedTemplate] = useState(null);
+  const [copyState, setCopyState] = useState({ key: null, status: 'idle' });
   const templates = Object.entries(PARENT_TEMPLATES);
 
-  const copyTemplate = (body) => {
-    navigator.clipboard.writeText(body);
+  const copyTemplate = async (key, body) => {
+    try {
+      await navigator.clipboard.writeText(body);
+      setCopyState({ key, status: 'copied' });
+    } catch {
+      setCopyState({ key, status: 'error' });
+    }
+    setTimeout(() => setCopyState({ key: null, status: 'idle' }), 2000);
   };
 
   return (
     <div className="px-4 py-5">
       <div className="max-w-lg mx-auto">
         <div className="bg-[var(--accent-light)] rounded-[var(--radius)] p-4 mb-6">
-          <p className="text-[14px] text-[var(--accent)] font-medium">
-            Ready-to-use email templates. Tap to view, copy, and customize.
+          <p className="text-[14px] text-[var(--accent)] font-medium mb-1">
+            Ready-to-use email templates. Tap to view and copy.
+          </p>
+          <p className="text-[13px] text-[var(--text-secondary)]">
+            How to use: copy one, then replace anything in [brackets] with your details and delete any line you don't need before sending.
           </p>
         </div>
 
@@ -297,10 +348,18 @@ function TemplatesTab() {
                       {template.body}
                     </pre>
                     <button
-                      onClick={() => copyTemplate(template.body)}
-                      className="w-full mt-3 py-2.5 bg-[var(--accent)] text-white rounded-[10px] text-[14px] font-medium"
+                      onClick={() => copyTemplate(key, template.body)}
+                      className={`w-full mt-3 py-2.5 rounded-[10px] text-[14px] font-medium transition-colors ${
+                        copyState.key === key && copyState.status === 'copied'
+                          ? 'bg-[var(--rating-good)] text-white'
+                          : 'bg-[var(--accent)] text-white'
+                      }`}
                     >
-                      Copy Template
+                      {copyState.key === key && copyState.status === 'copied'
+                        ? '✓ Copied'
+                        : copyState.key === key && copyState.status === 'error'
+                        ? 'Copy failed, select the text manually'
+                        : 'Copy template'}
                     </button>
                   </div>
                 </div>
@@ -313,13 +372,31 @@ function TemplatesTab() {
   );
 }
 
+const CHECKLIST_STORAGE_KEY = 'pfb.guide.checklists';
+
+function loadChecklistState() {
+  try {
+    return JSON.parse(localStorage.getItem(CHECKLIST_STORAGE_KEY)) || {};
+  } catch {
+    return {};
+  }
+}
+
 function ChecklistsTab() {
   const [selectedChecklist, setSelectedChecklist] = useState('preSeasonCoach');
-  const [checkedItems, setCheckedItems] = useState({});
+  const [checkedItems, setCheckedItems] = useState(loadChecklistState);
 
   const toggleItem = (checklistId, index) => {
     const key = `${checklistId}-${index}`;
-    setCheckedItems(prev => ({ ...prev, [key]: !prev[key] }));
+    setCheckedItems(prev => {
+      const next = { ...prev, [key]: !prev[key] };
+      try {
+        localStorage.setItem(CHECKLIST_STORAGE_KEY, JSON.stringify(next));
+      } catch {
+        // storage blocked (private mode); checkmarks just won't persist
+      }
+      return next;
+    });
   };
 
   const checklist = CHECKLISTS[selectedChecklist];
@@ -411,37 +488,34 @@ function ChecklistsTab() {
 function TrapsTab() {
   const [expandedTrap, setExpandedTrap] = useState(null);
 
-  const severityColors = {
-    critical: 'bg-[#FF3B30] text-white',
-    high: 'bg-[#FF9500] text-white',
-    medium: 'bg-[#FFCC00] text-black'
-  };
-
   return (
     <div className="px-4 py-5">
       <div className="max-w-lg mx-auto">
         {/* Warning Header */}
-        <div className="bg-[#FF3B30] rounded-[var(--radius)] p-4 mb-6 text-center">
-          <h2 className="text-[18px] font-bold text-white mb-1">⚠️ Coaching Traps & Mistakes</h2>
-          <p className="text-[13px] text-white/90">
-            Common pitfalls that hurt player development. Read these BEFORE your season starts.
+        <div className="bg-[var(--accent-light)] rounded-[var(--radius)] p-4 mb-6 text-center">
+          <h2 className="text-[18px] font-bold text-[var(--text-primary)] mb-1">Shortcuts that backfire</h2>
+          <p className="text-[13px] text-[var(--text-secondary)]">
+            Just by reading this you are already ahead of most new coaches. These are common habits to skip, no pressure.
           </p>
         </div>
 
         {/* Critical Warning: Read & React */}
-        <div className="bg-[var(--bg-card)] rounded-[var(--radius)] shadow-[var(--shadow-card)] overflow-hidden mb-4 border-2 border-[#FF3B30]">
-          <div className="bg-[#FF3B30] px-4 py-3">
+        <div className="bg-[var(--bg-card)] rounded-[var(--radius)] shadow-[var(--shadow-card)] overflow-hidden mb-4">
+          <div className="bg-[var(--bg-secondary)] px-4 py-3">
             <div className="flex items-center gap-2">
-              <span className="text-xl">🚨</span>
-              <h3 className="text-[16px] font-bold text-white">The Read & React Trap</h3>
+              <span className="text-xl">🏀</span>
+              <h3 className="text-[16px] font-bold text-[var(--text-primary)]">The Read &amp; React Trap</h3>
             </div>
           </div>
           <div className="p-4 space-y-3">
+            <p className="text-[13px] text-[var(--text-muted)] italic">
+              Never heard of "Read &amp; React"? You can skip this, you don't need it. It is only for coaches who were thinking about installing it.
+            </p>
             <p className="text-[14px] text-[var(--text-primary)] font-medium">
-              Teaching Read & React in weeks instead of years.
+              Teaching Read &amp; React in weeks instead of years.
             </p>
             <p className="text-[13px] text-[var(--text-secondary)]">
-              Read & React has 17+ layers. It takes <strong>2-3 YEARS</strong> to install properly. 
+              Read & React has about 20 layers, meant to span <strong>8-10 YEARS</strong> (one or two layers a year). 
               Coaches see the DVD, get excited, and try to teach everything in a month. Kids get overwhelmed and execute nothing well.
             </p>
             
@@ -456,7 +530,7 @@ function TrapsTab() {
             </div>
 
             <p className="text-[11px] text-[var(--text-muted)] italic">
-              "If you try to teach everything, you teach nothing." — Rick Torbett
+              "If you try to teach everything, you teach nothing." - Rick Torbett
             </p>
           </div>
         </div>
@@ -492,9 +566,6 @@ function TrapsTab() {
                 <div className="flex-1">
                   <div className="flex items-center gap-2">
                     <span className="text-[14px] font-semibold text-[var(--text-primary)]">{trap.title}</span>
-                    <span className={`text-[9px] font-bold uppercase px-1.5 py-0.5 rounded ${severityColors[trap.severity]}`}>
-                      {trap.severity}
-                    </span>
                   </div>
                   <p className="text-[12px] text-[var(--text-muted)] mt-0.5">{trap.trap}</p>
                 </div>

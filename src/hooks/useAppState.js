@@ -1,13 +1,15 @@
 import { useState, useEffect, useCallback } from 'react';
-import { loadState, saveState, createSession } from '../utils/storage';
+import { loadState, saveState, createSession, isStorageAvailable } from '../utils/storage';
 
 export function useAppState() {
   const [state, setState] = useState(null);
   const [saveStatus, setSaveStatus] = useState('idle');
+  const [storageAvailable, setStorageAvailable] = useState(true);
 
   useEffect(() => {
     const loaded = loadState();
     setState(loaded);
+    setStorageAvailable(isStorageAvailable());
   }, []);
 
   const save = useCallback((newState) => {
@@ -15,6 +17,7 @@ export function useAppState() {
     setSaveStatus('saving');
     const success = saveState(newState);
     setSaveStatus(success ? 'saved' : 'error');
+    if (!success) setStorageAvailable(false);
     setTimeout(() => setSaveStatus('idle'), 2000);
   }, []);
 
@@ -122,7 +125,7 @@ export function useAppState() {
 
   const deleteSession = useCallback((sessionId) => {
     if (!state) return;
-    const { [sessionId]: removed, ...remainingSessions } = state.sessions;
+    const { [sessionId]: _removed, ...remainingSessions } = state.sessions;
     save({
       ...state,
       activeSessionId: state.activeSessionId === sessionId ? null : state.activeSessionId,
@@ -152,11 +155,25 @@ export function useAppState() {
     });
   }, [state, save]);
 
+  const setSeasonStartDate = useCallback((date) => {
+    if (!state) return;
+    save({ ...state, seasonStartDate: date });
+  }, [state, save]);
+
+  const updateSeasonSettings = useCallback((partial) => {
+    if (!state) return;
+    save({ ...state, ...partial });
+  }, [state, save]);
+
   const activeSession = state?.activeSessionId ? state.sessions[state.activeSessionId] : null;
 
   return {
     state,
     saveStatus,
+    storageAvailable,
+    seasonStartDate: state?.seasonStartDate ?? null,
+    setSeasonStartDate,
+    updateSeasonSettings,
     activeSession,
     acceptPromise,
     startSession,

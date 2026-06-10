@@ -5,6 +5,10 @@ const DEFAULT_STATE = {
   activeSessionId: null,
   promiseAccepted: false,
   promiseAcceptedAt: null,
+  seasonStartDate: null,
+  seasonWeeks: 12,
+  seasonBreakAfter: 2,
+  seasonBreakWeeks: 2,
   sessions: {}
 };
 
@@ -26,6 +30,21 @@ export function saveState(state) {
     return true;
   } catch (e) {
     console.error('Failed to save state:', e);
+    return false;
+  }
+}
+
+// Probe whether localStorage is usable at all. Returns false in private/incognito
+// modes, on storage-disabled/locked-down devices, or when quota is exhausted.
+// The app is intentionally device-dependent, so this is about warning the coach,
+// not about adding any off-device persistence.
+export function isStorageAvailable() {
+  try {
+    const testKey = '__pfb_storage_test__';
+    localStorage.setItem(testKey, '1');
+    localStorage.removeItem(testKey);
+    return true;
+  } catch {
     return false;
   }
 }

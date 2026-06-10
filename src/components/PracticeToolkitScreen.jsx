@@ -11,14 +11,14 @@ export function PracticeToolkitScreen({ onBack }) {
   return (
     <div className="min-h-screen bg-[var(--bg-page)] flex flex-col">
       <Header 
-        title="Practice Toolkit" 
+        title="Practice Toolkit"
         leftAction={onBack}
-        leftLabel="← Home"
+        leftLabel="← Handbook"
       />
 
       {/* Tab Bar */}
-      <div className="bg-[var(--bg-card)] px-2 py-2 shadow-[var(--shadow-card)] overflow-x-auto">
-        <div className="max-w-lg mx-auto flex gap-1 min-w-max">
+      <div className="bg-[var(--bg-card)] px-2 py-2 shadow-[var(--shadow-card)]">
+        <div className="max-w-lg mx-auto flex gap-1">
           <TabButton 
             active={activeTab === 'template'} 
             onClick={() => setActiveTab('template')}
@@ -88,10 +88,13 @@ function PracticeTemplateView() {
         </div>
 
         {/* Total Time */}
-        <div className="text-center mb-4">
+        <div className="text-center mb-2">
           <span className="text-[32px] font-bold text-[var(--text-primary)]">90</span>
           <span className="text-[15px] text-[var(--text-muted)] ml-1">minutes</span>
         </div>
+        <p className="text-[12px] text-[var(--text-secondary)] text-center mb-4">
+          Only have 60 minutes? Drop one skill block and shorten the scrimmage to 10 minutes.
+        </p>
 
         {/* Timeline */}
         <div className="bg-[var(--bg-card)] rounded-[var(--radius)] shadow-[var(--shadow-card)] overflow-hidden">
@@ -160,7 +163,12 @@ ${drillDetails}
     `.trim();
 
     const printWindow = window.open('', '_blank');
-    printWindow.document.write(`<pre style="font-family: system-ui; font-size: 14px; padding: 20px;">${content}</pre>`);
+    if (!printWindow) {
+      alert('Your browser blocked the print window. Allow pop-ups for this site to print.');
+      return;
+    }
+    const safe = content.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+    printWindow.document.write(`<pre style="font-family: system-ui; font-size: 14px; padding: 20px;">${safe}</pre>`);
     printWindow.document.close();
     printWindow.print();
   };
@@ -259,7 +267,7 @@ function DrillLibraryView({ selectedCategory, setSelectedCategory, selectedDrill
           >
             All
           </button>
-          {DRILL_CATEGORIES.map(cat => (
+          {DRILL_CATEGORIES.filter(cat => DRILLS.some(d => d.category === cat.id)).map(cat => (
             <button
               key={cat.id}
               onClick={() => setSelectedCategory(cat.id)}

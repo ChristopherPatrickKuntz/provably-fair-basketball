@@ -2,187 +2,261 @@ import { useState } from 'react';
 import { Header } from './Header';
 import { SEASON_PHASES, LEAGUE_RULES } from '../data/seasonPlan';
 import { DRILLS } from '../data/drills';
+import { parseStart, formatWeekRange, formatSpan } from '../utils/seasonDates';
 
-// Helper to shift dates by weeks
-function shiftDate(dateStr, weeksOffset) {
-  if (!dateStr || weeksOffset === 0) return dateStr;
-  
-  // Parse date strings like "Dec 1-6" or "Jan 13-19"
-  const months = { 'Dec': 11, 'Jan': 0, 'Feb': 1, 'Mar': 2 };
-  const match = dateStr.match(/([A-Za-z]+)\s*(\d+)(?:-(\d+))?/);
-  if (!match) return dateStr;
-  
-  const [, month, startDay, endDay] = match;
-  const monthNum = months[month];
-  if (monthNum === undefined) return dateStr;
-  
-  const year = monthNum >= 10 ? 2024 : 2025; // Dec is 2024, others 2025
-  const start = new Date(year, monthNum, parseInt(startDay));
-  start.setDate(start.getDate() + (weeksOffset * 7));
-  
-  const monthNames = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
-  const newMonth = monthNames[start.getMonth()];
-  const newStart = start.getDate();
-  
-  if (endDay) {
-    const end = new Date(year, monthNum, parseInt(endDay));
-    end.setDate(end.getDate() + (weeksOffset * 7));
-    const endMonth = monthNames[end.getMonth()];
-    if (endMonth !== newMonth) {
-      return `${newMonth} ${newStart}-${endMonth} ${end.getDate()}`;
-    }
-    return `${newMonth} ${newStart}-${end.getDate()}`;
-  }
-  return `${newMonth} ${newStart}`;
+// The curriculum: tryouts (pre-season) and the final taper are fixed bookends; the
+// numbered weeks between them are what the coach's "weeks" setting draws from.
+const ALL_WEEKS = SEASON_PHASES.filter((p) => !p.isBreak).flatMap((p) => p.weeks || []);
+const TRYOUTS_WEEK = ALL_WEEKS.find((w) => w.id === 'tryouts') || null;
+const FINAL_WEEK = ALL_WEEKS.find((w) => /^Final/i.test(w.name)) || null;
+const CORE_WEEKS = ALL_WEEKS.filter((w) => w !== TRYOUTS_WEEK && w !== FINAL_WEEK);
+const MIN_WEEKS = 4;
+const MAX_WEEKS = 18;
+
+function genericWeek(n) {
+  return {
+    id: `extra-${n}`,
+    name: `Week ${n}: Open Practice`,
+    language: 'Reinforce and refine',
+    skills: ['Review your weak spots', 'Scrimmage with a purpose', 'Try a Quick Session'],
+    practicePlans: [],
+  };
 }
 
-export function SeasonSpineScreen({ onBack }) {
-  const [selectedWeek, setSelectedWeek] = useState(null);
-  const [showRules, setShowRules] = useState(false);
-  const [showDateAdjust, setShowDateAdjust] = useState(false);
-  const [weekOffset, setWeekOffset] = useState(0); // -4 to +4 weeks
+// Build a flat, dated schedule from the coach's settings: tryouts, the chosen number of
+// practice weeks, an optional break, and the final taper. Each item carries a calendar
+// index so its date computes from the start date.
+function buildSeasonSchedule({ weeks, breakAfter, breakWeeks }) {
+  const items = [];
+  let idx = 0;
+  if (TRYOUTS_WEEK) {
+    items.push({ key: 'tryouts', kind: 'week', week: TRYOUTS_WEEK, index: idx });
+    idx += 1;
+  }
+  for (let n = 1; n <= weeks; n += 1) {
+    items.push({ key: `w${n}`, kind: 'week', week: CORE_WEEKS[n - 1] || genericWeek(n), index: idx });
+    idx += 1;
+    if (breakWeeks > 0 && n === breakAfter && n < weeks) {
+      items.push({ key: 'break', kind: 'break', index: idx, weeks: breakWeeks });
+      idx += breakWeeks;
+    }
+  }
+  let endIndex = idx - 1;
+  if (FINAL_WEEK) {
+    items.push({ key: 'final', kind: 'week', week: FINAL_WEEK, index: idx });
+    endIndex = idx;
+  }
+  return { items, endIndex };
+}
 
-  // If a week is selected, show the practice plan view
-  if (selectedWeek) {
+export function SeasonSpineScreen({ onBack, season, onUpdateSeason }) {
+  const [selectedItem, setSelectedItem] = useState(null);
+  const [showRules, setShowRules] = useState(false);
+
+  const start = parseStart(season.startDate);
+  const { items, endIndex } = buildSeasonSchedule({
+    weeks: season.weeks,
+    breakAfter: season.breakAfter,
+    breakWeeks: season.breakWeeks,
+  });
+
+  // If a week is selected, show its practice plan
+  if (selectedItem) {
     return (
-      <PracticePlanView 
-        week={selectedWeek}
-        weekOffset={weekOffset}
-        onBack={() => setSelectedWeek(null)} 
+      <PracticePlanView
+        week={selectedItem.week}
+        displayDates={start ? formatWeekRange(start, selectedItem.index) : null}
+        onBack={() => setSelectedItem(null)}
       />
     );
   }
 
   return (
     <div className="min-h-screen bg-[var(--bg-page)] flex flex-col">
-      <Header 
-        title="Season Plan" 
+      <Header
+        title="Season Plan"
         leftAction={onBack}
-        leftLabel="← Home"
+        leftLabel="← Handbook"
         rightAction={() => setShowRules(true)}
         rightLabel="Rules"
       />
 
       <div className="flex-1 overflow-y-auto px-4 py-5">
         <div className="max-w-lg mx-auto">
-          {/* Date Adjustment */}
-          <div className="bg-[var(--bg-card)] rounded-[var(--radius)] shadow-[var(--shadow-card)] p-4 mb-4">
-            <button 
-              onClick={() => setShowDateAdjust(!showDateAdjust)}
-              className="w-full flex items-center justify-between"
-            >
-              <div className="flex items-center gap-2">
-                <span className="text-[15px]">📅</span>
-                <span className="text-[14px] font-medium text-[var(--text-primary)]">
-                  {weekOffset === 0 ? 'Adjust Season Dates' : `Season shifted ${weekOffset > 0 ? '+' : ''}${weekOffset} week${Math.abs(weekOffset) !== 1 ? 's' : ''}`}
-                </span>
-              </div>
-              <svg 
-                className={`w-4 h-4 text-[var(--text-muted)] transition-transform ${showDateAdjust ? 'rotate-180' : ''}`}
-                fill="none" stroke="currentColor" viewBox="0 0 24 24"
-              >
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
-              </svg>
-            </button>
-            
-            {showDateAdjust && (
-              <div className="mt-4 pt-4 border-t border-[var(--bg-secondary)]">
-                <p className="text-[12px] text-[var(--text-muted)] mb-3">
-                  Slide to adjust all dates if your season starts earlier or later.
-                </p>
-                <div className="flex items-center gap-3">
-                  <span className="text-[11px] text-[var(--text-muted)]">-4w</span>
-                  <input
-                    type="range"
-                    min="-4"
-                    max="4"
-                    value={weekOffset}
-                    onChange={(e) => setWeekOffset(parseInt(e.target.value))}
-                    className="flex-1 h-2 bg-[var(--bg-secondary)] rounded-lg appearance-none cursor-pointer accent-[var(--accent)]"
-                  />
-                  <span className="text-[11px] text-[var(--text-muted)]">+4w</span>
-                </div>
-                <div className="text-center mt-2">
-                  <span className="text-[13px] font-medium text-[var(--accent)]">
-                    {weekOffset === 0 ? 'Default timing' : `${weekOffset > 0 ? '+' : ''}${weekOffset} week${Math.abs(weekOffset) !== 1 ? 's' : ''}`}
-                  </span>
-                </div>
-                {weekOffset !== 0 && (
-                  <button
-                    onClick={() => setWeekOffset(0)}
-                    className="w-full mt-2 text-[12px] text-[var(--text-muted)] underline"
-                  >
-                    Reset to default
-                  </button>
-                )}
-              </div>
-            )}
-          </div>
+          <SeasonSetupCard
+            season={season}
+            onUpdate={onUpdateSeason}
+            endDate={start ? formatWeekRange(start, endIndex) : null}
+          />
 
-          {/* Intro */}
-          <div className="bg-[var(--accent-light)] rounded-[var(--radius)] p-4 mb-6">
+          <div className="bg-[var(--accent-light)] rounded-[var(--radius)] p-4 mb-5">
             <p className="text-[15px] text-[var(--accent)] font-medium">
               Tap any week to see the full practice plan.
             </p>
           </div>
 
-          {/* Phases */}
-          {SEASON_PHASES.map((phase) => (
-            <div key={phase.id} className="mb-6">
-              {phase.isBreak ? (
-                <div className="bg-[var(--bg-secondary)] rounded-[var(--radius)] p-4 text-center">
-                  <p className="text-[13px] text-[var(--text-muted)] uppercase tracking-wide">
-                    {phase.name}
+          <div className="space-y-2">
+            {items.map((item) =>
+              item.kind === 'break' ? (
+                <div key={item.key} className="bg-[var(--bg-secondary)] rounded-[var(--radius)] p-4 text-center my-1">
+                  <p className="text-[13px] text-[var(--text-muted)] uppercase tracking-wide">Mid-Season Break</p>
+                  <p className="text-[13px] text-[var(--text-secondary)]">
+                    {start ? formatSpan(start, item.index, item.weeks) : `${item.weeks} week${item.weeks === 1 ? '' : 's'} off`}
                   </p>
-                  <p className="text-[15px] text-[var(--text-secondary)]">{phase.period}</p>
                 </div>
               ) : (
-                <>
-                  <div className="mb-3">
-                    <h2 className="text-[17px] font-semibold text-[var(--text-primary)]">
-                      {phase.name}
-                    </h2>
-                    <p className="text-[13px] text-[var(--text-muted)]">{phase.period}</p>
-                    {phase.ruleChange && (
-                      <p className="text-[12px] text-[var(--rating-ok)] mt-1">⚠️ {phase.ruleChange}</p>
-                    )}
-                  </div>
+                <WeekCard
+                  key={item.key}
+                  week={item.week}
+                  displayDates={start ? formatWeekRange(start, item.index) : null}
+                  onTap={() => setSelectedItem(item)}
+                />
+              )
+            )}
+          </div>
 
-                  <div className="space-y-2">
-                    {phase.weeks?.map((week) => (
-                      <WeekCard
-                        key={week.id}
-                        week={week}
-                        weekOffset={weekOffset}
-                        onTap={() => setSelectedWeek(week)}
-                      />
-                    ))}
-                  </div>
-                </>
-              )}
-            </div>
-          ))}
-
-          {/* Championship */}
-          <div className="bg-[var(--accent)] rounded-[var(--radius)] p-4 text-center">
-            <p className="text-[13px] text-white/80 uppercase tracking-wide mb-1">Championship</p>
-            <p className="text-[17px] text-white font-semibold">Second Monday in March</p>
+          {/* Season end */}
+          <div className="bg-[var(--accent)] rounded-[var(--radius)] p-4 text-center mt-4">
+            <p className="text-[13px] text-white/80 uppercase tracking-wide mb-1">Season ends</p>
+            <p className="text-[17px] text-white font-semibold">
+              {start ? formatWeekRange(start, endIndex) : 'Set your start date above'}
+            </p>
+            <p className="text-[12px] text-white/75 mt-1">Playoffs or final games usually follow.</p>
           </div>
         </div>
       </div>
 
-      {/* League Rules Modal */}
-      {showRules && (
-        <LeagueRulesModal onClose={() => setShowRules(false)} />
-      )}
+      {showRules && <LeagueRulesModal onClose={() => setShowRules(false)} />}
     </div>
   );
 }
 
-function WeekCard({ week, weekOffset = 0, onTap }) {
+function SeasonSetupCard({ season, onUpdate, endDate }) {
+  const noBreak = season.breakWeeks === 0;
+  const maxBreakAfter = Math.max(1, season.weeks - 1);
+
+  return (
+    <div className="bg-[var(--bg-card)] rounded-[var(--radius)] shadow-[var(--shadow-card)] p-4 mb-4 space-y-4">
+      {/* Start date */}
+      <div>
+        <label htmlFor="season-start" className="flex items-center gap-2 mb-1">
+          <span className="text-[15px]" aria-hidden="true">📅</span>
+          <span className="text-[14px] font-semibold text-[var(--text-primary)]">When does your season start?</span>
+        </label>
+        <div className="flex items-center gap-2">
+          <input
+            id="season-start"
+            type="date"
+            value={season.startDate || ''}
+            onChange={(e) => onUpdate({ seasonStartDate: e.target.value || null })}
+            className="flex-1 bg-[var(--bg-secondary)] rounded-[10px] px-3 py-2.5 text-[15px] text-[var(--text-primary)] border-none outline-none"
+          />
+          {season.startDate && (
+            <button
+              onClick={() => onUpdate({ seasonStartDate: null })}
+              className="text-[13px] text-[var(--text-muted)] underline px-2 py-2"
+            >
+              Clear
+            </button>
+          )}
+        </div>
+      </div>
+
+      {/* Weeks of practice */}
+      <Stepper
+        label="Weeks of practice"
+        value={season.weeks}
+        min={MIN_WEEKS}
+        max={MAX_WEEKS}
+        onChange={(v) => onUpdate({ seasonWeeks: v, seasonBreakAfter: Math.min(season.breakAfter, Math.max(1, v - 1)) })}
+      />
+
+      {/* Mid-season break */}
+      <div>
+        <div className="flex items-center justify-between mb-1">
+          <span className="text-[14px] font-semibold text-[var(--text-primary)]">Mid-season break</span>
+          <button
+            onClick={() => onUpdate({ seasonBreakWeeks: noBreak ? 2 : 0 })}
+            className="text-[12px] text-[var(--accent)] font-medium"
+          >
+            {noBreak ? 'Add a break' : 'Remove'}
+          </button>
+        </div>
+        {noBreak ? (
+          <p className="text-[12px] text-[var(--text-muted)]">No break, the season runs straight through.</p>
+        ) : (
+          <div className="space-y-2">
+            <Stepper
+              label="Break length"
+              value={season.breakWeeks}
+              min={1}
+              max={4}
+              small
+              onChange={(v) => onUpdate({ seasonBreakWeeks: v })}
+            />
+            <div className="flex items-center justify-between">
+              <span className="text-[13px] text-[var(--text-secondary)]">Break after</span>
+              <select
+                value={Math.min(season.breakAfter, maxBreakAfter)}
+                onChange={(e) => onUpdate({ seasonBreakAfter: parseInt(e.target.value, 10) })}
+                className="bg-[var(--bg-secondary)] rounded-[8px] px-3 py-1.5 text-[14px] text-[var(--text-primary)] border-none outline-none"
+              >
+                {Array.from({ length: maxBreakAfter }, (_, i) => i + 1).map((n) => (
+                  <option key={n} value={n}>Week {n}</option>
+                ))}
+              </select>
+            </div>
+          </div>
+        )}
+      </div>
+
+      {/* Summary */}
+      <div className="bg-[var(--accent-light)] rounded-[10px] p-3 text-center">
+        {endDate ? (
+          <p className="text-[13px] text-[var(--text-secondary)]">
+            Your season runs <strong className="text-[var(--text-primary)]">{season.weeks} weeks</strong> and ends{' '}
+            <strong className="text-[var(--text-primary)]">{endDate}</strong>.
+          </p>
+        ) : (
+          <p className="text-[13px] text-[var(--accent)]">Set a start date to lay out your dates. Saved on your device.</p>
+        )}
+      </div>
+    </div>
+  );
+}
+
+function Stepper({ label, value, min, max, onChange, small }) {
+  return (
+    <div className="flex items-center justify-between">
+      <span className={small ? 'text-[13px] text-[var(--text-secondary)]' : 'text-[14px] font-semibold text-[var(--text-primary)]'}>
+        {label}
+      </span>
+      <div className="flex items-center gap-3">
+        <button
+          onClick={() => onChange(Math.max(min, value - 1))}
+          disabled={value <= min}
+          aria-label={`Decrease ${label}`}
+          className="w-8 h-8 rounded-full bg-[var(--bg-secondary)] text-[var(--text-primary)] text-[18px] font-bold flex items-center justify-center disabled:opacity-40"
+        >
+          −
+        </button>
+        <span className="text-[16px] font-semibold text-[var(--text-primary)] w-7 text-center">{value}</span>
+        <button
+          onClick={() => onChange(Math.min(max, value + 1))}
+          disabled={value >= max}
+          aria-label={`Increase ${label}`}
+          className="w-8 h-8 rounded-full bg-[var(--bg-secondary)] text-[var(--text-primary)] text-[18px] font-bold flex items-center justify-center disabled:opacity-40"
+        >
+          +
+        </button>
+      </div>
+    </div>
+  );
+}
+
+function WeekCard({ week, displayDates, onTap }) {
   const hasPracticePlans = week.practicePlans && week.practicePlans.length > 0;
-  const displayDates = shiftDate(week.dates, weekOffset);
-  
+
   return (
     <button
       onClick={onTap}
@@ -197,7 +271,9 @@ function WeekCard({ week, weekOffset = 0, onTap }) {
             </span>
           )}
         </div>
-        <p className="text-[13px] text-[var(--text-muted)]">{displayDates}</p>
+        {displayDates && (
+          <p className="text-[13px] text-[var(--text-muted)]">{displayDates}</p>
+        )}
         <p className="text-[13px] text-[var(--accent)] italic mt-1">"{week.language}"</p>
       </div>
       <svg className="w-5 h-5 text-[var(--text-muted)]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -207,18 +283,41 @@ function WeekCard({ week, weekOffset = 0, onTap }) {
   );
 }
 
-function PracticePlanView({ week, weekOffset = 0, onBack }) {
+function PracticePlanView({ week, displayDates, onBack }) {
   const [selectedDay, setSelectedDay] = useState(0);
   const practicePlan = week.practicePlans?.[selectedDay];
-  const displayDates = shiftDate(week.dates, weekOffset);
+
+  const printPlan = () => {
+    if (!practicePlan) return;
+    const win = window.open('', '_blank');
+    if (!win) {
+      alert('Your browser blocked the print window. Allow pop-ups for this site to print.');
+      return;
+    }
+    const esc = (s) => String(s ?? '').replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+    const rows = practicePlan.blocks
+      .map(
+        (b) =>
+          `<tr><td style="white-space:nowrap;padding:4px 12px 4px 0;font-weight:600;color:#007AFF;vertical-align:top">${esc(b.time)}</td><td style="padding:4px 0"><strong>${esc(b.activity)}</strong> <span style="color:#888;font-size:11px">(${esc(b.type)})</span>${b.details ? `<br><span style="color:#555;font-size:12px">${esc(b.details)}</span>` : ''}</td></tr>`
+      )
+      .join('');
+    win.document.write(
+      `<!DOCTYPE html><html><head><meta charset="UTF-8"><title>${esc(week.name)} - Day ${practicePlan.day}</title></head><body style="font-family:-apple-system,BlinkMacSystemFont,sans-serif;max-width:700px;margin:0 auto;padding:24px;color:#1D1D1F"><h1 style="font-size:20px;color:#007AFF;margin:0 0 4px">${esc(week.name)}</h1><p style="color:#666;margin:0 0 4px">${displayDates ? esc(displayDates) + ' &middot; ' : ''}Day ${practicePlan.day} &middot; 90 minutes</p><p style="font-style:italic;color:#007AFF;margin:0 0 16px">"${esc(week.language)}"</p><table style="width:100%;border-collapse:collapse;font-size:13px">${rows}</table><p style="margin-top:24px;color:#999;font-size:11px">Provably Fair Basketball &middot; cpk.solutions</p></body></html>`
+    );
+    win.document.close();
+    win.focus();
+    setTimeout(() => win.print(), 250);
+  };
 
   return (
     <div className="min-h-screen bg-[var(--bg-page)] flex flex-col">
-      <Header 
+      <Header
         title={week.name}
         subtitle={displayDates}
         leftAction={onBack}
         leftLabel="← Back"
+        rightAction={practicePlan ? printPlan : undefined}
+        rightLabel={practicePlan ? 'Print' : undefined}
       />
 
       {/* Week Overview */}
@@ -239,8 +338,8 @@ function PracticePlanView({ week, weekOffset = 0, onBack }) {
                 key={i}
                 onClick={() => setSelectedDay(i)}
                 className={`flex-1 py-2.5 rounded-[10px] text-[15px] font-medium transition-all ${
-                  selectedDay === i 
-                    ? 'bg-[var(--accent)] text-white' 
+                  selectedDay === i
+                    ? 'bg-[var(--accent)] text-white'
                     : 'bg-[var(--bg-secondary)] text-[var(--text-secondary)]'
                 }`}
               >
@@ -258,7 +357,7 @@ function PracticePlanView({ week, weekOffset = 0, onBack }) {
             <p className="text-[12px] text-[var(--text-muted)] uppercase tracking-wide mb-2 px-1">Skills This Week</p>
             <div className="flex flex-wrap gap-1.5">
               {week.skills.map((skill, i) => (
-                <span 
+                <span
                   key={i}
                   className="text-[12px] bg-[var(--bg-card)] shadow-[var(--shadow-card)] text-[var(--text-secondary)] px-2.5 py-1.5 rounded-[8px]"
                 >
@@ -272,10 +371,10 @@ function PracticePlanView({ week, weekOffset = 0, onBack }) {
           {practicePlan ? (
             <div className="space-y-2">
               <p className="text-[12px] text-[var(--text-muted)] uppercase tracking-wide mb-2 px-1">
-                Practice Plan — Day {practicePlan.day} (90 min)
+                Practice Plan - Day {practicePlan.day} (90 min)
               </p>
               {practicePlan.blocks.map((block, i) => (
-                <PracticeBlock key={i} block={block} index={i} />
+                <PracticeBlock key={i} block={block} />
               ))}
             </div>
           ) : (
@@ -293,7 +392,7 @@ function PracticePlanView({ week, weekOffset = 0, onBack }) {
   );
 }
 
-function PracticeBlock({ block, index }) {
+function PracticeBlock({ block }) {
   const [showDrill, setShowDrill] = useState(false);
   const drill = block.drillId ? DRILLS.find(d => d.id === block.drillId) : null;
 
@@ -309,7 +408,7 @@ function PracticeBlock({ block, index }) {
 
   return (
     <div className="bg-[var(--bg-card)] rounded-[var(--radius)] shadow-[var(--shadow-card)] overflow-hidden">
-      <button 
+      <button
         onClick={() => drill && setShowDrill(!showDrill)}
         className="w-full flex text-left"
       >
@@ -317,7 +416,7 @@ function PracticeBlock({ block, index }) {
         <div className="w-16 bg-[var(--bg-secondary)] flex items-center justify-center py-3">
           <span className="text-[13px] font-mono text-[var(--accent)] font-medium">{block.time}</span>
         </div>
-        
+
         {/* Content */}
         <div className="flex-1 p-3">
           <div className="flex items-center gap-2 mb-1">
@@ -345,7 +444,7 @@ function PracticeBlock({ block, index }) {
               <h4 className="text-[14px] font-semibold text-[var(--accent)]">{drill.name}</h4>
               <span className="text-[11px] text-[var(--text-muted)]">{drill.time} • {drill.players}</span>
             </div>
-            
+
             {drill.setup && (
               <div>
                 <p className="text-[11px] text-[var(--text-muted)] uppercase tracking-wide mb-1">Setup</p>
@@ -397,7 +496,7 @@ function PracticeBlock({ block, index }) {
 
 function LeagueRulesModal({ onClose }) {
   return (
-    <div 
+    <div
       className="fixed inset-0 bg-black/40 z-50 flex items-center justify-center p-4"
       onClick={(e) => e.target === e.currentTarget && onClose()}
     >
@@ -408,8 +507,12 @@ function LeagueRulesModal({ onClose }) {
             Done
           </button>
         </div>
-        
+
         <div className="overflow-y-auto p-4 space-y-4 flex-1">
+          <p className="text-[12px] text-[var(--text-muted)] italic">
+            These are the Moose Jaw league rules, where this started. Your league may differ, so check yours.
+          </p>
+
           {/* First Half */}
           <div className="bg-[var(--bg-secondary)] rounded-[12px] p-4">
             <h4 className="text-[15px] font-semibold text-[var(--text-primary)] mb-3">

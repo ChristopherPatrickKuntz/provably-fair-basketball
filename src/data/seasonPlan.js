@@ -2,12 +2,10 @@ export const SEASON_PHASES = [
   {
     id: 'phase1',
     name: 'Phase 1: Foundations',
-    period: 'December',
     weeks: [
       {
         id: 'tryouts',
         name: 'Tryouts',
-        dates: 'Dec 1-6',
         focus: 'Evaluate players. Set rosters. No teaching.',
         language: 'Observe and assess',
         skills: ['Use Tryout Evaluation Tool', 'Rate 6 domains', 'Document observations'],
@@ -16,7 +14,6 @@ export const SEASON_PHASES = [
       {
         id: 'week1',
         name: 'Week 1: Movement & Footwork',
-        dates: 'Dec 7-14',
         focus: 'Learn how to move with purpose',
         language: 'Move with purpose',
         skills: ['Listening & structure', 'Dribbling eyes up', 'Basic passing', 'Layup footwork', 'Spacing', 'Defensive stance', 'Pivots'],
@@ -55,7 +52,6 @@ export const SEASON_PHASES = [
       {
         id: 'week2',
         name: 'Week 2: Pass & Move',
-        dates: 'Dec 14-19',
         focus: 'Pass and move to space',
         language: 'Pass and move to space',
         skills: ['Pass → cut', 'Pass → space', 'Jump stops', 'Both-side layups', 'Triple threat', 'One-dribble drive', 'Help defense'],
@@ -94,19 +90,17 @@ export const SEASON_PHASES = [
   },
   {
     id: 'break',
-    name: 'Holiday Break',
-    period: 'Dec 19 - Jan 5',
+    name: 'Mid-Season Break',
+    breakWeeks: 2,
     isBreak: true
   },
   {
     id: 'phase2',
     name: 'Phase 2: Half-Court Team',
-    period: 'January',
     weeks: [
       {
         id: 'week3',
         name: 'Week 3: Reset & Rebuild',
-        dates: 'Jan 6-12',
         focus: 'Get our habits back',
         language: 'Get our habits back',
         skills: ['Reinstall spacing', 'Rebuild timing', 'Cutting habits', 'Transition lanes', 'Shot selection'],
@@ -133,9 +127,9 @@ export const SEASON_PHASES = [
               { time: '0:10', type: 'Huddle', activity: 'Focus: Shot Selection', details: '"Good shots vs. bad shots. What\'s a good shot for us?"' },
               { time: '0:15', type: 'Skill', activity: 'Layups (Both Sides)', details: 'Alternate right and left.', drillId: 'basic-layup-lines' },
               { time: '0:25', type: 'Skill', activity: 'Spot Shooting', details: 'Pairs. 5 shots from elbow, 5 from block, 5 from wing.', drillId: 'spot-shooting' },
-              { time: '0:40', type: 'Game', activity: 'Shot Selection Game', details: '3v3. Layups = 2 pts. Mid-range = 1 pt. Three-pointers = 0 pts.', drillId: '3v3-one-dribble' },
+              { time: '0:40', type: 'Game', activity: 'Shot Selection Game', details: '3v3. Layups = 2 pts. Mid-range = 1 pt. Three-pointers = 0 pts.' },
               { time: '0:55', type: 'Skill', activity: 'Transition (5v0)', details: 'Add speed. Outlet, fill, finish.', drillId: '5v0-transition' },
-              { time: '1:05', type: 'Game', activity: '5v5 Transition', details: 'Start from made basket. Outlet and go.', drillId: '3v3-transition' },
+              { time: '1:05', type: 'Game', activity: '5v5 Transition', details: 'Start from made basket. Outlet and go.' },
               { time: '1:15', type: 'Scrimmage', activity: '5v5 Full', details: 'Praise good shot selection and spacing.' },
               { time: '1:25', type: 'Huddle', activity: 'Close', details: '"We take good shots. We trust each other."' }
             ]
@@ -145,7 +139,6 @@ export const SEASON_PHASES = [
       {
         id: 'week4',
         name: 'Week 4: Transition & Man Defense',
-        dates: 'Jan 13-19',
         focus: 'Run with purpose, defend with discipline',
         language: 'Run with purpose, defend with discipline',
         skills: ['Outlet structure', 'Run wide, run early', 'Help & recover', 'Staying in front', 'Inbound spacing'],
@@ -155,7 +148,7 @@ export const SEASON_PHASES = [
             blocks: [
               { time: '0:00', type: 'Warm-Up', activity: 'Shooting Flow', details: '', drillId: 'form-shooting' },
               { time: '0:10', type: 'Huddle', activity: 'Focus: Transition', details: '"When we get the ball, we GO."' },
-              { time: '0:15', type: 'Skill', activity: 'Outlet Pass Drill', details: 'Rebounder outlets to guard. Guard catches on the move.', drillId: 'partner-passing' },
+              { time: '0:15', type: 'Skill', activity: 'Outlet Pass Drill', details: 'Rebounder outlets to guard. Guard catches on the move.' },
               { time: '0:25', type: 'Skill', activity: '3-Man Weave', details: 'Classic drill. Pass and go behind. Finish with layup.', drillId: '3-man-weave' },
               { time: '0:35', type: 'Skill', activity: '5-Lane Break', details: 'Walk through lanes. Who fills where.', drillId: '5v0-transition' },
               { time: '0:45', type: 'Game', activity: '5v0 → 5v2', details: 'Start 5v0 transition. Add 2 defenders waiting at other end.', drillId: '5v0-transition' },
@@ -174,7 +167,7 @@ export const SEASON_PHASES = [
               { time: '0:30', type: 'Skill', activity: 'Closeout Drill', details: 'Defender starts in paint. Coach passes to wing. Defender closes out.', drillId: '1v1-closeout' },
               { time: '0:40', type: 'Game', activity: '2v2 Help & Recover', details: 'One ball. When drive happens, help must show.', drillId: '2v2-no-dribble' },
               { time: '0:55', type: 'Skill', activity: 'Inbound Spacing', details: 'Baseline out of bounds. Walk through positions.' },
-              { time: '1:05', type: 'Game', activity: 'Inbound vs. Defense', details: '5v5. Practice inbounding against pressure.', drillId: 'press-break' },
+              { time: '1:05', type: 'Game', activity: 'Inbound vs. Defense', details: '5v5. Practice inbounding against pressure.' },
               { time: '1:15', type: 'Scrimmage', activity: '5v5', details: '' },
               { time: '1:25', type: 'Huddle', activity: 'Close', details: '"Defend with discipline."' }
             ]
@@ -184,7 +177,6 @@ export const SEASON_PHASES = [
       {
         id: 'week5',
         name: 'Week 5: Game IQ & Advantage',
-        dates: 'Jan 20-26',
         focus: 'Find the easy play first',
         language: 'Find the easy play first',
         skills: ['When to drive vs. pass', 'Passing under pressure', 'Cutting with purpose', 'Rebounding assignments', 'Off-ball movement'],
@@ -194,7 +186,7 @@ export const SEASON_PHASES = [
             blocks: [
               { time: '0:00', type: 'Warm-Up', activity: 'Shooting Flow', details: '', drillId: 'form-shooting' },
               { time: '0:10', type: 'Huddle', activity: 'Focus: Reading the Defense', details: '"If they give you the lane, drive. If they help, pass."' },
-              { time: '0:15', type: 'Skill', activity: 'Drive & Kick', details: '2v1. Driver attacks, kicks to open shooter if help comes.', drillId: '2v2-no-dribble' },
+              { time: '0:15', type: 'Skill', activity: 'Drive & Kick', details: '2v1. Driver attacks, kicks to open shooter if help comes.' },
               { time: '0:30', type: 'Skill', activity: 'Pass Fake Drill', details: 'Catch, shot fake, pass fake, then make the right play.', drillId: 'partner-passing' },
               { time: '0:40', type: 'Game', activity: '3v3 Read & React', details: 'No set plays. Read the defense. Make the easy play.', drillId: '3v3-one-dribble' },
               { time: '0:55', type: 'Skill', activity: 'Rebounding Position', details: 'Box out fundamentals. Contact, wide base, find the ball.' },
@@ -208,7 +200,6 @@ export const SEASON_PHASES = [
       {
         id: 'week6',
         name: 'Week 6: Clean-Up & Press Break',
-        dates: 'Jan 27-Feb 1',
         focus: 'Stay calm when it gets fast',
         language: 'Stay calm when it gets fast',
         skills: ['Rhythm of movement', 'Footwork under pressure', 'Passing decisions at speed', 'Press break spacing'],
@@ -233,13 +224,11 @@ export const SEASON_PHASES = [
   {
     id: 'phase3',
     name: 'Phase 3: Defensive Expansion',
-    period: 'February',
     ruleChange: 'League rules now allow zone defense and full-court press.',
     weeks: [
       {
         id: 'week7',
         name: 'Week 7: Full-Court Press',
-        dates: 'Feb 2-8',
         focus: 'Pressure without panicking',
         language: 'Pressure without panicking',
         skills: ['Press positions', 'Controlled traps', 'Rotation timing', 'No-foul principles', 'Applying vs. breaking press'],
@@ -262,7 +251,6 @@ export const SEASON_PHASES = [
       {
         id: 'week8',
         name: 'Week 8: Zone Defense',
-        dates: 'Feb 9-15',
         focus: 'Move together. Protect the middle.',
         language: 'Move together. Protect the middle.',
         skills: ['2-3 zone positions', 'Shifting as one unit', 'Protecting high post', 'Corner coverage', 'Zone rebounding'],
@@ -285,7 +273,6 @@ export const SEASON_PHASES = [
       {
         id: 'week9',
         name: 'Week 9: Advanced Press',
-        dates: 'Feb 16-22',
         focus: 'Beat pressure with spacing and calm',
         language: 'Beat pressure with spacing and calm',
         skills: ['Soft press vs. hard trap', 'Rotation discipline', 'Breaking through middle', 'When to press/back off'],
@@ -308,7 +295,6 @@ export const SEASON_PHASES = [
       {
         id: 'week10',
         name: 'Week 10: Movement Under Pressure',
-        dates: 'Feb 23-28',
         focus: 'Smart movement beats fast movement',
         language: 'Smart movement beats fast movement',
         skills: ['Backdoor cuts', 'Kick-ups when driven at', 'Drift shooting', 'Post touches', 'Movement principles'],
@@ -318,7 +304,7 @@ export const SEASON_PHASES = [
             blocks: [
               { time: '0:00', type: 'Warm-Up', activity: 'Shooting Flow', details: '', drillId: 'form-shooting' },
               { time: '0:10', type: 'Huddle', activity: 'Focus: Smart Movement', details: '"Defenders follow the ball. Use that."' },
-              { time: '0:15', type: 'Skill', activity: 'Backdoor Cuts', details: 'When defender overplays, go backdoor.', drillId: 'pass-cut-lines' },
+              { time: '0:15', type: 'Skill', activity: 'Backdoor Cuts', details: 'When defender overplays, go backdoor.' },
               { time: '0:30', type: 'Skill', activity: 'Drift & Spot-Up', details: 'As drive happens, drift to open spots.', drillId: 'spot-shooting' },
               { time: '0:45', type: 'Game', activity: '3v3 Cutting Only', details: 'No dribbling. Only cutting and passing.', drillId: '3v3-one-dribble' },
               { time: '1:00', type: 'Skill', activity: 'Post Touch Drill', details: 'Entry pass to post, kick-out, shot.' },
@@ -333,12 +319,10 @@ export const SEASON_PHASES = [
   {
     id: 'phase4',
     name: 'Phase 4: Playoff Prep',
-    period: 'March',
     weeks: [
       {
         id: 'week11',
         name: 'Week 11: Situational & Identity',
-        dates: 'Feb 28-Mar 1',
         focus: 'Know who we are when the game is on the line',
         language: 'This is who we are',
         skills: ['End-of-game offense', 'Protecting leads', 'Foul-to-give rules', 'Team identity'],
@@ -361,7 +345,6 @@ export const SEASON_PHASES = [
       {
         id: 'week12',
         name: 'Week 12: Sharpening',
-        dates: 'Mar 1-7',
         focus: 'Fine-tune everything',
         language: 'Sharp and ready',
         skills: ['Review all concepts', 'Game-speed reps', 'Mental preparation'],
@@ -383,7 +366,6 @@ export const SEASON_PHASES = [
       {
         id: 'final',
         name: 'Final Week: Light & Confident',
-        dates: 'Mar 7-9',
         focus: 'Trust your preparation',
         language: 'Trust the work',
         skills: ['Light practice', 'Confidence building', 'Rest and recovery'],
@@ -412,7 +394,7 @@ export const LEAGUE_RULES = {
     notAllowed: ['Full-court press', 'Zone defense']
   },
   secondHalf: {
-    title: 'Second Half of Season (Late January+)',
+    title: 'Second Half of Season',
     allowed: ['Full-court man', 'Zone defense', 'Pressing', 'All standard rules']
   },
   fairPlay: {

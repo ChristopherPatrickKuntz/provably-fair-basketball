@@ -13,7 +13,7 @@ export const NEW_COACH_GUIDE = {
       content: [
         {
           heading: 'Your #1 Job',
-          text: "You're not building basketball players. You're building people who happen to play basketball. The skills you teach—effort, teamwork, resilience, respect—will serve them for life. Basketball is just the vehicle.",
+          text: "You're not building basketball players. You're building people who happen to play basketball. The skills you teach - effort, teamwork, resilience, respect - will serve them for life. Basketball is just the vehicle.",
         },
         {
           heading: 'The Double-Goal Coach',
@@ -50,7 +50,7 @@ export const NEW_COACH_GUIDE = {
         {
           heading: 'Learn to Train (Ages 9-12)',
           bullets: [
-            'Focus: Skill development window—this is when kids learn fastest',
+            'Focus: Skill development window - this is when kids learn fastest',
             'Practice ratio: 50% games, 50% skill work',
             'Introduce basic tactics and positions',
             'Still emphasize effort over winning',
@@ -60,7 +60,7 @@ export const NEW_COACH_GUIDE = {
         {
           heading: 'Train to Train (Ages 12-16)',
           bullets: [
-            'Focus: Building the "engine"—aerobic capacity, strength foundation',
+            'Focus: Building the "engine" - aerobic capacity, strength foundation',
             'Practice ratio: 40% games, 60% structured training',
             'More complex tactics and decision-making',
             'Competition becomes more important',
@@ -125,7 +125,7 @@ export const NEW_COACH_GUIDE = {
         },
         {
           heading: 'The "Whole-Part-Whole" Method',
-          text: "Show the whole skill first (demo), break it into parts (teach), put it back together (practice). Don't spend too long on any part—kids learn by doing.",
+          text: "Show the whole skill first (demo), break it into parts (teach), put it back together (practice). Don't spend too long on any part - kids learn by doing.",
           source: 'NCCP Coaching Methodology'
         },
         {
@@ -140,7 +140,7 @@ export const NEW_COACH_GUIDE = {
             'Add token/passive defense',
             'Add live defense',
             'Add game context (score, time)',
-            'If kids struggle, go back a step—no shame'
+            'If kids struggle, go back a step - no shame'
           ]
         }
       ]
@@ -152,7 +152,7 @@ export const NEW_COACH_GUIDE = {
       content: [
         {
           heading: 'The Feedback Sandwich (Use Sparingly)',
-          text: "Positive → Corrective → Positive. But don't overuse it—kids see through it. Better: Be direct, kind, and specific.",
+          text: "Positive → Corrective → Positive. But don't overuse it - kids see through it. Better: Be direct, kind, and specific.",
         },
         {
           heading: 'Effective Praise',
@@ -171,12 +171,12 @@ export const NEW_COACH_GUIDE = {
             'One correction at a time',
             'Show them the right way (don\'t just say what\'s wrong)',
             'Give them a chance to try again immediately',
-            'Be patient—learning takes repetition'
+            'Be patient - learning takes repetition'
           ]
         },
         {
           heading: 'Body Language',
-          text: "Your body language speaks louder than words. Crossed arms, sighing, looking away—kids notice everything. Stay engaged, encouraging, calm.",
+          text: "Your body language speaks louder than words. Crossed arms, sighing, looking away - kids notice everything. Stay engaged, encouraging, calm.",
         }
       ]
     },
@@ -198,7 +198,7 @@ export const NEW_COACH_GUIDE = {
         {
           heading: 'During the Game',
           bullets: [
-            'Stay calm—your energy sets the tone',
+            'Stay calm - your energy sets the tone',
             'Coach effort and attitude, not just plays',
             'Equal playing time in recreational leagues',
             'Timeout focus: 1 thing to fix, 1 encouragement',
@@ -216,7 +216,7 @@ export const NEW_COACH_GUIDE = {
             'Shake hands with other team (model sportsmanship)',
             'Brief positive huddle: one highlight',
             'Thank parents',
-            'Reflect on your own coaching—what worked?'
+            'Reflect on your own coaching - what worked?'
           ]
         }
       ]
@@ -309,7 +309,7 @@ export const LTAD_STAGES = [
     focus: 'Daily active play',
     keyPoints: [
       'Movement exploration',
-      'No organized sport—just play',
+      'No organized sport - just play',
       'Develop physical literacy foundation',
       'Fun is the only goal'
     ]
@@ -425,7 +425,7 @@ COMMUNICATION
 HOW YOU CAN HELP
 • Get players to practice on time
 • Cheer for effort, not just results
-• Let me coach—no sideline instructions
+• Let me coach - no sideline instructions
 • Model great sportsmanship
 
 PARENT MEETING
@@ -445,7 +445,7 @@ Coach [Your Name]`
 
 Thanks for letting me know [Player Name] will miss [practice/game] on [date].
 
-No problem at all—family and school always come first. [He/She] can work on [specific skill] at home if interested, but there's no pressure.
+No problem at all - family and school always come first. [He/She] can work on [specific skill] at home if interested, but there's no pressure.
 
 See you at the next [practice/game]!
 
@@ -462,7 +462,7 @@ Thank you for reaching out. I understand playing time is important to you and [P
 Here's my approach:
 • Every player gets at least [X] minutes per game
 • I rotate positions so everyone develops
-• Playing time can increase with effort in practice and games
+• As players grow more confident and consistent, their roles grow too, and every player matters to this team
 
 If you'd like to discuss [Player Name]'s development specifically, I'm happy to meet in person. Would [date/time] work?
 
@@ -478,11 +478,11 @@ Coach [Your Name]`
 
 I wanted to touch base about something I observed at [practice/game] today.
 
-[Describe specific behavior factually, without judgment]
+Today during our scrimmage, [Player Name] got frustrated after a few missed shots and stepped away from the drill for a minute.
 
-I addressed it with [Player Name] by [what you said/did], and [he/she] responded well.
+I talked with [him/her] about it, reminded [him/her] that mistakes are part of learning, and [he/she] responded well.
 
-I'm sharing this because I believe in open communication. This is not a major issue—just something I wanted you to be aware of.
+I'm sharing this because I believe in open communication. This is not a major issue - just something I wanted you to be aware of.
 
 If you have any insights about what might be going on, I'm all ears. Sometimes there are things happening that I don't know about.
 
@@ -496,7 +496,7 @@ Coach [Your Name]`
     subject: 'What a Season! Thank You',
     body: `Dear [Team Name] Families,
 
-What an incredible season! I'm so proud of how our players grew—not just as basketball players, but as teammates and young people.
+What an incredible season! I'm so proud of how our players grew - not just as basketball players, but as teammates and young people.
 
 SEASON HIGHLIGHTS
 • [Specific team achievement]
@@ -510,7 +510,7 @@ WHAT'S NEXT
 [Off-season info, next season registration, etc.]
 
 A REQUEST
-If you have feedback—positive or constructive—I'd love to hear it. I'm always trying to improve.
+If you have feedback - positive or constructive - I'd love to hear it. I'm always trying to improve.
 
 It's been an honor coaching [Team Name]. See you next season!
 
@@ -599,10 +599,27 @@ export const BASKETBALL_RULES_BASICS = {
     {
       name: 'Court & Equipment',
       rules: [
-        'Ball size: Youth (27.5"), Intermediate (28.5"), Official (29.5")',
-        'Hoop height: 8-10 feet depending on age group',
-        'Free throw line: May be moved closer for younger ages',
-        'Three-point line: Often not used in youth leagues'
+        'Ball, boys and men (high school and up): size 7, 29.5 inches',
+        'Ball, girls and women (every level, high school through college and the WNBA): size 6, 28.5 inches',
+        'Ball, ages 9 to 11: size 5, 27.5 inches; younger kids use smaller. Middle school varies by league, so check yours',
+        'Hoop height: 10 feet from age 12 up; younger youth lower it (about 9 feet at ages 10 to 11, 8 feet at ages 8 to 9)',
+        'Free throw line: 15 feet from the backboard (sometimes moved closer for young leagues)',
+        'Three-point line: 19 feet 9 inches in most high schools; often not used in younger youth leagues'
+      ]
+    },
+    {
+      name: 'Key Terms (plain English)',
+      rules: [
+        'Triple threat: holding the ball ready to shoot, pass, or dribble',
+        'Closeout: sprinting at a shooter, then chopping your feet to stop under control',
+        'Outlet: the first pass that starts a fast break after a rebound',
+        'Give-and-go: pass to a teammate, then cut to the basket for a return pass',
+        'V-cut: walk your defender one way, then cut sharply the other to get open',
+        'Pick / screen: standing still to block a defender so a teammate gets free',
+        'Drop step: a big step toward the basket with your back to the defender',
+        'Help defense: leaving your player for a moment to stop a driver, then recovering',
+        '4-out: four players spaced around the 3-point arc, none in the post',
+        'Check ball: pass to the defender at the top and get it back to start a possession'
       ]
     },
     {
@@ -731,9 +748,9 @@ export const HELPFUL_LINKS = {
       icon: '📹',
       links: [
         { 
-          name: 'Jr. NBA YouTube', 
-          url: 'https://www.youtube.com/@jaborofficial', 
-          description: 'Official Jr. NBA drills and skills videos.'
+          name: 'Jr. NBA / Jr. WNBA YouTube',
+          url: 'https://www.youtube.com/channel/UCuA7P9O4_YEJHa6epPnWAbg',
+          description: 'Official Jr. NBA youth basketball drills and skills videos.'
         },
         { 
           name: 'Coach Daniel', 
@@ -773,9 +790,9 @@ export const HELPFUL_LINKS = {
       icon: '📋',
       links: [
         { 
-          name: 'FIBA Rules', 
-          url: 'https://www.fiba.basketball/rules', 
-          description: 'Official international basketball rules.'
+          name: 'FIBA Rules (advanced reference)',
+          url: 'https://www.fiba.basketball/rules',
+          description: 'The full official rulebook. For the basics you actually need, read Basketball Basics in the Coach\'s Guide first.'
         },
         { 
           name: 'Referee.com', 
@@ -794,14 +811,14 @@ export const HELPFUL_LINKS = {
           description: 'Equipment, balls, cones, training aids.'
         },
         { 
-          name: 'FastDraw (Plays)', 
-          url: 'https://www.fastmodelsports.com', 
-          description: 'Basketball play diagramming software.'
+          name: 'Diagram plays (advanced, optional)',
+          url: 'https://www.fastmodelsports.com',
+          description: 'Play-diagramming software. New coaches do not need this, focus on skills, not plays.'
         }
       ]
     },
     {
-      name: 'Local Resources (SK)',
+      name: 'Moose Jaw & Saskatchewan (home base)',
       icon: '📍',
       links: [
         { 
@@ -917,7 +934,7 @@ export const COACHING_TRAPS = [
       'Add 1-2 layers per year as players progress',
       'Single season? Just do Pass & Cut. That\'s it.'
     ],
-    quote: '"Could start in 5th grade with layers 1 and 2, and add a layer every year as the kids progress." — Coach\'s Clipboard on Read & React'
+    quote: '"Could start in 5th grade with layers 1 and 2, and add a layer every year as the kids progress." - Coach\'s Clipboard on Read & React'
   },
   {
     id: 'too-many-plays',
@@ -933,7 +950,7 @@ export const COACHING_TRAPS = [
       'Plays are for end-of-game, not every possession',
       'If your play doesn\'t work, players should know how to freelance'
     ],
-    quote: '"Players don\'t remember plays. They remember concepts." — Don Meyer'
+    quote: '"Players don\'t remember plays. They remember concepts." - Don Meyer'
   },
   {
     id: 'zone-crutch',
@@ -949,7 +966,7 @@ export const COACHING_TRAPS = [
       'Focus on individual defense: stance, slides, closeouts',
       'The goal is developing players, not winning youth championships'
     ],
-    quote: '"Zone defense is where bad habits go to hide." — Bob Knight'
+    quote: '"Zone defense is where bad habits go to hide." - Bob Knight'
   },
   {
     id: 'practice-scrimmage',
@@ -963,7 +980,7 @@ export const COACHING_TRAPS = [
       'Use small-sided games: 1v1, 2v2, 3v3 (more touches)',
       'Skill blocks should be 50%+ of practice time',
       'Scrimmage with PURPOSE: specific rule (no dribble, must screen)',
-      'Stop scrimmages to teach—don\'t just let them play'
+      'Stop scrimmages to teach - don\'t just let them play'
     ],
     quote: '"You don\'t get better by playing games. You get better by practicing."'
   },
@@ -979,9 +996,9 @@ export const COACHING_TRAPS = [
       'Save feedback for timeouts and practices',
       'During games: encouragement only from the bench',
       'Correct mistakes in practice, not in front of parents',
-      'Your energy sets the team\'s energy—stay calm'
+      'Your energy sets the team\'s energy - stay calm'
     ],
-    quote: '"The kids who need love the most will ask for it in the most unloving ways." — Unknown'
+    quote: '"The kids who need love the most will ask for it in the most unloving ways." - Unknown'
   },
   {
     id: 'playing-time-politics',
@@ -989,11 +1006,11 @@ export const COACHING_TRAPS = [
     severity: 'critical',
     icon: '⏱️',
     trap: 'Giving your best 5 players 80% of minutes to win games.',
-    reality: 'You\'re not developing players—you\'re burning out 5 and losing 7. The bench players stop trying, their parents get angry, and your "stars" never learn to play through adversity. Everyone loses.',
+    reality: 'You\'re not developing players - you\'re burning out 5 and losing 7. The bench players stop trying, their parents get angry, and your "stars" never learn to play through adversity. Everyone loses.',
     solution: [
       'Equal playing time in recreational leagues. Period.',
       'In competitive leagues: minimum 40% for all players',
-      'Track minutes—don\'t guess',
+      'Track minutes - don\'t guess',
       'The 8th player today might be your best player in 2 years',
       'Development > winning at youth level'
     ],
@@ -1013,7 +1030,7 @@ export const COACHING_TRAPS = [
       '"If you want to discuss your child, schedule a meeting"',
       'Never change a lineup because a parent complained'
     ],
-    quote: '"Clear is kind. Unclear is unkind." — Brené Brown'
+    quote: '"Clear is kind. Unclear is unkind." - Brené Brown'
   },
   {
     id: 'early-specialization',
@@ -1037,7 +1054,7 @@ export const COACHING_TRAPS = [
     severity: 'high',
     icon: '🧩',
     trap: 'Adding complexity before mastering simplicity.',
-    reality: 'Coaches get bored with basics. They want to run the fancy play, the full-court press, the Princeton offense. But your players can\'t make layups yet. Excellence isn\'t about knowing a lot—it\'s about executing the basics at a high level.',
+    reality: 'Coaches get bored with basics. They want to run the fancy play, the full-court press, the Princeton offense. But your players can\'t make layups yet. Excellence isn\'t about knowing a lot - it\'s about executing the basics at a high level.',
     solution: [
       'Master one thing before adding another',
       'Can they make 70% of layups? No? Keep working on layups.',
@@ -1045,7 +1062,7 @@ export const COACHING_TRAPS = [
       'Exciting practice = coach feels good, players learn little',
       'Simplicity scales. Complexity crumbles under pressure.'
     ],
-    quote: '"I fear not the man who has practiced 10,000 kicks once, but I fear the man who has practiced one kick 10,000 times." — Bruce Lee'
+    quote: '"I fear not the man who has practiced 10,000 kicks once, but I fear the man who has practiced one kick 10,000 times." - Bruce Lee'
   }
 ];
 
@@ -1205,6 +1222,11 @@ export const SCHOOL_STATEMENT = {
 
 export const FAQ = [
   {
+    id: 'where-do-i-start',
+    question: 'I\'m brand new to coaching. Where do I start?',
+    answer: 'Open Start Here on the home screen. It is a 5-step path built for brand-new coaches: the right mindset, your first practice, running fair tryouts, the season plan, and talking with parents. You do not need a basketball background.'
+  },
+  {
     id: 'what-is-this',
     question: 'What is Provably Fair Basketball?',
     answer: 'A free toolkit for youth basketball coaches and schools. It provides a structured tryout evaluation system, a 12-week season plan, practice drills, and parent communication templates. Our goal is to reduce overwhelm for new coaches and bring transparency to tryouts.'
@@ -1217,7 +1239,7 @@ export const FAQ = [
   {
     id: 'how-tryout-works',
     question: 'How does the tryout evaluation work?',
-    answer: 'Coaches observe players across 6 skill domains (Ball Handling, Shooting, Defense, etc.) and rate each player 1-4 using simple descriptions. The app calculates totals and shows natural groupings. No names are stored—only jersey/pinnie numbers. You keep the name-to-number list on paper.'
+    answer: 'Coaches observe players across 6 areas (Effort, Coachable, Ball Skills, Footwork, Finishing, and Teammate) and rate each with simple labels (Needs Work, OK, or Good), with effort and character weighted most. The app scores and ranks for you. No names are stored, only jersey numbers, and you keep the name-to-number list on paper.'
   },
   {
     id: 'is-data-stored',
@@ -1240,11 +1262,6 @@ export const FAQ = [
     answer: 'A library of drills organized by skill, difficulty, and equipment needed. Plus quick session templates for common situations (short practice, game day warmup, etc.). Everything is printable.'
   },
   {
-    id: 'coach-guide',
-    question: 'I\'m a brand new coach. Where do I start?',
-    answer: 'Start with the Coach\'s Guide. It covers the right mindset, age-appropriate development, practice structure, game day management, and common mistakes to avoid. Then check out the Season Plan for weekly structure.'
-  },
-  {
     id: 'is-this-free',
     question: 'Is this really free?',
     answer: 'Yes. No accounts, no subscriptions, no ads, no data collection. It\'s a community resource built to help youth basketball be more fair and less stressful for everyone involved.'
@@ -1252,12 +1269,12 @@ export const FAQ = [
   {
     id: 'school-admin',
     question: 'I\'m a principal/AD. How do I explain this to parents?',
-    answer: 'We have a ready-to-use School Statement template you can copy and customize. It explains what the tool is, what it isn\'t, and how student privacy is protected. Find it in the Resources section.'
+    answer: 'We have a ready-to-use School Statement template you can copy and customize. It explains what the tool is, what it isn\'t, and how student privacy is protected. Find it in Quick Reference, under "Statement for your school".'
   },
   {
     id: 'can-this-be-gamed',
     question: 'Can coaches still play favorites?',
-    answer: 'We can\'t prevent bad faith. What we can do is make the process transparent and structured so it\'s harder to lie to yourself about fairness. If a coach wants to rig it, that\'s on them—but they\'ll have to do it consciously, not accidentally.'
+    answer: 'We can\'t prevent bad faith. What we can do is make the process transparent and structured so it\'s harder to lie to yourself about fairness. If a coach wants to rig it, that\'s on them - but they\'ll have to do it consciously, not accidentally.'
   },
   {
     id: 'mobile-friendly',

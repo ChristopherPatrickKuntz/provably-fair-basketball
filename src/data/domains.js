@@ -135,7 +135,7 @@ export const DOMAINS = [
 ];
 
 export const RATINGS = [
-  { value: null, label: '—', sublabel: 'Skip', color: 'skip' },
+  { value: null, label: '-', sublabel: 'Skip', color: 'skip' },
   { value: 1, label: '1', sublabel: 'Needs Work', color: 'needs-work' },
   { value: 2, label: '2', sublabel: 'OK', color: 'ok' },
   { value: 3, label: '3', sublabel: 'Good', color: 'good' }

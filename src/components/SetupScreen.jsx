@@ -64,6 +64,10 @@ export function SetupScreen({ sessions, onStartSession, onContinueSession, onDel
               <button
                 onClick={() => {
                   const printWindow = window.open('', '_blank');
+                  if (!printWindow) {
+                    alert('Your browser blocked the print window. Allow pop-ups for this site to print.');
+                    return;
+                  }
                   printWindow.document.write(`<pre style="font-family: monospace; font-size: 12px;">${PRINT_ATTENDANCE_SHEET}</pre>`);
                   printWindow.document.close();
                   printWindow.print();
@@ -240,6 +244,7 @@ function SessionRow({ session, onTap, onDelete }) {
         <div className="flex items-center gap-2">
           <button
             onClick={(e) => { e.stopPropagation(); setShowDelete(!showDelete); }}
+            aria-label="Session options"
             className="p-1.5 text-[var(--text-muted)] hover:text-[var(--rating-needs-work)] rounded-full hover:bg-[var(--bg-secondary)]"
           >
             <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">

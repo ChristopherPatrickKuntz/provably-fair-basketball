@@ -79,7 +79,7 @@ export const DRILLS = [
     equipment: ['1 ball per player'],
     setup: 'Everyone has a ball. Spread out in half court.',
     steps: [
-      '"Show me your pivot foot" — establish anchor foot',
+      '"Show me your pivot foot" - establish anchor foot',
       'Front pivot (90°, 180°) on whistle',
       'Reverse pivot (90°, 180°) on whistle',
       'Alternate: "Front!" "Reverse!" "Front!"'
@@ -94,7 +94,7 @@ export const DRILLS = [
       'Standing straight up instead of staying low',
       'Not protecting the ball'
     ],
-    progression: 'Add "triple threat!" command — pivot into shot-ready position',
+    progression: 'Add "triple threat!" command - pivot into shot-ready position',
     usedInWeeks: [1, 3, 6]
   },
   {
@@ -144,7 +144,7 @@ export const DRILLS = [
     name: 'Pass & Cut Lines',
     time: '10 min',
     players: '9+ (three lines)',
-    setup: 'Three lines at half court — left wing, top, right wing. Ball starts in middle.',
+    setup: 'Three lines at half court - left wing, top, right wing. Ball starts in middle.',
     steps: [
       'Middle passes to right wing',
       'Middle cuts to basket',
@@ -419,7 +419,7 @@ export const DRILLS = [
     ],
     coachingPoints: [
       'Get open to the ball (move toward it)',
-      'Middle is usually open — use it',
+      'Middle is usually open - use it',
       'Stay calm. Don\'t rush.'
     ],
     progression: 'Add full trapping press'
@@ -431,7 +431,7 @@ export const DRILLS = [
     name: 'Basic Layup Lines',
     time: '10 min',
     players: 'All (two lines)',
-    setup: 'Two lines at half court — one for shooting, one for rebounding.',
+    setup: 'Two lines at half court - one for shooting, one for rebounding.',
     steps: [
       'Shooter dribbles to basket, makes layup',
       'Rebounder catches, outlets to next shooter',

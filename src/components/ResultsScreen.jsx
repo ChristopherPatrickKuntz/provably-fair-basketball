@@ -10,6 +10,16 @@ export function ResultsScreen({ session, onEdit, onNewSession }) {
   
   const sorted = sortByScore(session.ratings);
   const playersWithScores = sorted.filter(p => p.score !== null);
+
+  // Only players rated on enough domains get a comparable rank + medal, so a player
+  // rated on one strong domain can't masquerade above a fully-evaluated player.
+  const MIN_RANKABLE = 4;
+  const rankedPlayers = sorted.filter((p) => p.score !== null && p.domainsRated >= MIN_RANKABLE);
+  const partialPlayers = sorted.filter((p) => p.score !== null && p.domainsRated < MIN_RANKABLE);
+  const unratedPlayers = sorted.filter((p) => p.score === null);
+  const displayOrder = [...rankedPlayers, ...partialPlayers, ...unratedPlayers];
+  const medalRank = {};
+  rankedPlayers.forEach((p, i) => { medalRank[p.player] = i; });
   const avgScore = playersWithScores.length > 0 
     ? Math.round(playersWithScores.reduce((sum, p) => sum + p.score, 0) / playersWithScores.length)
     : null;
@@ -23,11 +33,11 @@ export function ResultsScreen({ session, onEdit, onNewSession }) {
   };
 
   const getRatingLabel = (value) => {
-    if (value === null || value === undefined) return { text: '—', color: 'var(--text-muted)', bg: 'var(--bg-secondary)' };
+    if (value === null || value === undefined) return { text: '-', color: 'var(--text-muted)', bg: 'var(--bg-secondary)' };
     if (value === 1) return { text: 'Needs Work', color: 'var(--rating-needs-work)', bg: 'rgba(255,59,48,0.1)' };
     if (value === 2) return { text: 'OK', color: 'var(--rating-ok)', bg: 'rgba(255,149,0,0.1)' };
     if (value === 3) return { text: 'Good', color: 'var(--rating-good)', bg: 'rgba(52,199,89,0.1)' };
-    return { text: '—', color: 'var(--text-muted)', bg: 'var(--bg-secondary)' };
+    return { text: '-', color: 'var(--text-muted)', bg: 'var(--bg-secondary)' };
   };
 
   const getScoreTier = (score) => {
@@ -56,7 +66,7 @@ export function ResultsScreen({ session, onEdit, onNewSession }) {
               <div className="text-[11px] text-[var(--text-muted)] uppercase tracking-wide">Players</div>
             </div>
             <div>
-              <div className="text-[24px] font-bold text-[var(--accent)]">{avgScore ?? '—'}%</div>
+              <div className="text-[24px] font-bold text-[var(--accent)]">{avgScore ?? '-'}%</div>
               <div className="text-[11px] text-[var(--text-muted)] uppercase tracking-wide">Avg Score</div>
             </div>
             <div>
@@ -89,7 +99,13 @@ export function ResultsScreen({ session, onEdit, onNewSession }) {
       {/* Player Cards */}
       <div className="flex-1 overflow-y-auto px-4 py-4 pb-28">
         <div className="max-w-lg mx-auto space-y-2">
-          {sorted.map(({ player, domains, score, domainsRated }, index) => {
+          <div className="bg-[var(--accent-light)] rounded-[10px] p-3 mb-1">
+            <p className="text-[12px] text-[var(--text-secondary)]">
+              Scores only compare fairly when players are rated on the same things. Anyone rated on fewer
+              than {MIN_RANKABLE} of the 6 domains is marked "rate more to rank" and sorted below, with no top-3 badge.
+            </p>
+          </div>
+          {displayOrder.map(({ player, domains, score, domainsRated }, index) => {
             const tier = getScoreTier(score);
             const isExpanded = expandedPlayer === player;
             
@@ -106,9 +122,9 @@ export function ResultsScreen({ session, onEdit, onNewSession }) {
                   <div className="flex items-center gap-3">
                     {/* Rank Badge */}
                     <div className={`w-9 h-9 rounded-full flex items-center justify-center text-[14px] font-bold ${
-                      index === 0 ? 'bg-[#FFD700] text-black' :
-                      index === 1 ? 'bg-[#C0C0C0] text-black' :
-                      index === 2 ? 'bg-[#CD7F32] text-white' :
+                      medalRank[player] === 0 ? 'bg-[#FFD700] text-black' :
+                      medalRank[player] === 1 ? 'bg-[#C0C0C0] text-black' :
+                      medalRank[player] === 2 ? 'bg-[#CD7F32] text-white' :
                       'bg-[var(--bg-secondary)] text-[var(--text-primary)]'
                     }`}>
                       {player}
@@ -119,6 +135,7 @@ export function ResultsScreen({ session, onEdit, onNewSession }) {
                       </div>
                       <div className="text-[12px]" style={{ color: tier.color }}>
                         {tier.label} • {domainsRated}/6 domains
+                        {score !== null && domainsRated < MIN_RANKABLE ? ' • rate more to rank' : ''}
                       </div>
                     </div>
                   </div>

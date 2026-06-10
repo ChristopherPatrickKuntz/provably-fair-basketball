@@ -62,6 +62,15 @@ export async function copyToClipboard(text) {
   }
 }
 
+// Escape user-authored text (notes, session name) before putting it in print HTML.
+function escapeHtml(value) {
+  return String(value ?? '')
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;');
+}
+
 export function generatePrintableHTML(session, ratings) {
   const sorted = sortByScore(ratings);
   const date = new Date(session.createdAt).toLocaleDateString('en-US', {
@@ -77,7 +86,7 @@ export function generatePrintableHTML(session, ratings) {
   };
 
   const getRatingLabel = (rating) => {
-    if (rating === null || rating === undefined) return '—';
+    if (rating === null || rating === undefined) return '-';
     if (rating === 1) return 'Needs Work';
     if (rating === 2) return 'OK';
     return 'Good';
@@ -95,12 +104,12 @@ export function generatePrintableHTML(session, ratings) {
   let playersHTML = sorted.map(({ player, domains: playerDomains, score, domainsRated }, index) => `
     <div class="player-card">
       <div class="player-header">
-        <div class="rank">${index + 1}</div>
+        <div class="rank">${score === null ? '-' : index + 1}</div>
         <div class="player-info">
           <strong>Player #${player}</strong>
           <span class="meta">${domainsRated}/6 domains rated</span>
         </div>
-        <div class="score" style="color: ${score >= 70 ? '#34C759' : score >= 50 ? '#FF9500' : '#FF3B30'}">
+        <div class="score" style="color: ${score === null ? '#999' : score >= 70 ? '#34C759' : score >= 50 ? '#FF9500' : '#FF3B30'}">
           ${score !== null ? score + '%' : 'N/A'}
         </div>
       </div>
@@ -112,7 +121,7 @@ export function generatePrintableHTML(session, ratings) {
           </div>
         `).join('')}
       </div>
-      ${playerDomains.note ? `<div class="note">Note: ${playerDomains.note}</div>` : ''}
+      ${playerDomains.note ? `<div class="note">Note: ${escapeHtml(playerDomains.note)}</div>` : ''}
     </div>
   `).join('');
 
@@ -120,7 +129,7 @@ export function generatePrintableHTML(session, ratings) {
 <html>
 <head>
   <meta charset="UTF-8">
-  <title>Tryout Evaluation - ${session.name}</title>
+  <title>Tryout Evaluation - ${escapeHtml(session.name)}</title>
   <style>
     * { box-sizing: border-box; margin: 0; padding: 0; }
     body { 
@@ -229,7 +238,7 @@ export function generatePrintableHTML(session, ratings) {
 <body>
   <div class="header">
     <h1>Tryout Evaluation Summary</h1>
-    <div class="meta">${session.name} | ${date} | ${gradeBand}</div>
+    <div class="meta">${escapeHtml(session.name)} | ${date} | ${gradeBand}</div>
   </div>
 
   <div class="privacy-notice">
@@ -247,7 +256,7 @@ export function generatePrintableHTML(session, ratings) {
       <div class="label">Rated</div>
     </div>
     <div class="summary-item">
-      <div class="value">${sorted.length > 0 && sorted[0].score ? sorted[0].score + '%' : '—'}</div>
+      <div class="value">${sorted.length > 0 && sorted[0].score ? sorted[0].score + '%' : '-'}</div>
       <div class="label">Top Score</div>
     </div>
   </div>
@@ -265,6 +274,10 @@ export function generatePrintableHTML(session, ratings) {
 export function printResults(session, ratings) {
   const html = generatePrintableHTML(session, ratings);
   const printWindow = window.open('', '_blank');
+  if (!printWindow) {
+    alert('Your browser blocked the print window. Allow pop-ups for this site, or use Copy Text instead.');
+    return;
+  }
   printWindow.document.write(html);
   printWindow.document.close();
   printWindow.focus();

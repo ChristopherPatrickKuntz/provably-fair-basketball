@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect, useCallback, useRef } from 'react';
 import { DOMAINS } from '../data/domains';
 import { calculateScore, getDomainsRated } from '../utils/scoring';
 import { RatingSegmentedControl } from './SegmentedControl';
@@ -6,9 +6,8 @@ import { Header } from './Header';
 
 export function EvaluateScreen({ session, onUpdateRating, onUpdateNote, onComplete, onBack, saveStatus }) {
   const [selectedPlayer, setSelectedPlayer] = useState(1);
-  const [showNotes, setShowNotes] = useState(false);
-  const [noteText, setNoteText] = useState('');
   const [expandedDomain, setExpandedDomain] = useState(null);
+  const scrollRef = useRef(null);
 
   const playerRatings = session.ratings[selectedPlayer] || {};
   const playerScore = calculateScore(playerRatings);
@@ -18,11 +17,6 @@ export function EvaluateScreen({ session, onUpdateRating, onUpdateNote, onComple
   const getAgeContext = (domain) => {
     return session.gradeBand === 'high' ? domain.highSchool : domain.middleSchool;
   };
-
-  useEffect(() => {
-    setNoteText(playerRatings.note || '');
-    setShowNotes(!!playerRatings.note);
-  }, [selectedPlayer, playerRatings.note]);
 
   const hasData = (playerId) => {
     const ratings = session.ratings[playerId];
@@ -45,10 +39,15 @@ export function EvaluateScreen({ session, onUpdateRating, onUpdateNote, onComple
     return () => window.removeEventListener('keydown', handleKeyDown);
   }, [handleKeyDown]);
 
-  const handleNoteBlur = () => {
-    if (noteText !== (playerRatings.note || '')) {
-      onUpdateNote(selectedPlayer, noteText);
-    }
+  // Scroll the domain list back to the top when the player changes, so the coach
+  // sees the new player's first domain instead of staying scrolled at the bottom.
+  useEffect(() => {
+    scrollRef.current?.scrollTo({ top: 0 });
+  }, [selectedPlayer]);
+
+  const handleComplete = () => {
+    if (getRatedCount() === 0 && !window.confirm("You haven't rated any players yet. Finish anyway?")) return;
+    onComplete();
   };
 
   return (
@@ -58,7 +57,7 @@ export function EvaluateScreen({ session, onUpdateRating, onUpdateNote, onComple
         subtitle={saveStatus === 'saved' ? 'Saved ✓' : saveStatus === 'saving' ? 'Saving...' : ''}
         leftAction={onBack}
         leftLabel="← Back"
-        rightAction={onComplete}
+        rightAction={handleComplete}
         rightLabel="DONE"
         rightVariant="primary"
       />
@@ -112,7 +111,7 @@ export function EvaluateScreen({ session, onUpdateRating, onUpdateNote, onComple
       </div>
 
       {/* Domain Rating Cards */}
-      <div className="flex-1 overflow-y-auto px-4 py-4">
+      <div ref={scrollRef} className="flex-1 overflow-y-auto px-4 py-4">
         <div className="max-w-lg mx-auto space-y-3">
           {DOMAINS.map(domain => {
             const isExpanded = expandedDomain === domain.id;
@@ -216,45 +215,75 @@ export function EvaluateScreen({ session, onUpdateRating, onUpdateNote, onComple
           {domainsRated < 4 && (
             <div className="bg-[var(--rating-ok)]/10 border border-[var(--rating-ok)]/30 rounded-[var(--radius)] p-3">
               <p className="text-[13px] text-[var(--rating-ok)]">
-                <strong>Tip:</strong> If you can't observe a domain, use "Skip" — don't guess.
+                <strong>Tip:</strong> If you can't observe a domain, use "Skip" - don't guess.
               </p>
             </div>
           )}
 
-          {/* Add Note */}
-          <div className="bg-[var(--bg-card)] rounded-[var(--radius)] p-4 shadow-[var(--shadow-card)]">
-            {!showNotes ? (
-              <button
-                onClick={() => setShowNotes(true)}
-                className="text-[15px] text-[var(--accent)] font-medium"
-              >
-                + Add Note
-              </button>
-            ) : (
-              <div>
-                <div className="flex items-center justify-between mb-2">
-                  <span className="text-[15px] font-semibold text-[var(--text-primary)]">Note</span>
-                  <button
-                    onClick={() => { setShowNotes(false); handleNoteBlur(); }}
-                    className="text-[13px] text-[var(--accent)]"
-                  >
-                    Done
-                  </button>
-                </div>
-                <textarea
-                  value={noteText}
-                  onChange={(e) => setNoteText(e.target.value)}
-                  onBlur={handleNoteBlur}
-                  placeholder="Optional observations, context, or reminders..."
-                  className="w-full bg-[var(--bg-secondary)] rounded-[10px] p-3 text-[15px] text-[var(--text-primary)] placeholder:text-[var(--text-muted)] resize-none border-none outline-none"
-                  rows={2}
-                  autoFocus
-                />
-              </div>
-            )}
-          </div>
+          {/* Add Note - keyed by player so it resets cleanly when switching */}
+          <PlayerNote
+            key={selectedPlayer}
+            initialNote={playerRatings.note}
+            onSave={(text) => onUpdateNote(selectedPlayer, text)}
+          />
+
+          {selectedPlayer < session.playerCount && (
+            <button
+              onClick={() => setSelectedPlayer((p) => Math.min(session.playerCount, p + 1))}
+              className="w-full py-3.5 bg-[var(--accent)] text-white rounded-[var(--radius)] text-[16px] font-semibold active:scale-[0.98] transition-transform"
+            >
+              Next player →
+            </button>
+          )}
         </div>
       </div>
+    </div>
+  );
+}
+
+// Note editor for the selected player. Mounted with key={player} so its local
+// edit state resets cleanly on player change - no setState-in-effect needed.
+function PlayerNote({ initialNote, onSave }) {
+  const [showNotes, setShowNotes] = useState(!!initialNote);
+  const [noteText, setNoteText] = useState(initialNote || '');
+
+  const handleBlur = () => {
+    if (noteText !== (initialNote || '')) {
+      onSave(noteText);
+    }
+  };
+
+  return (
+    <div className="bg-[var(--bg-card)] rounded-[var(--radius)] p-4 shadow-[var(--shadow-card)]">
+      {!showNotes ? (
+        <button
+          onClick={() => setShowNotes(true)}
+          className="text-[15px] text-[var(--accent)] font-medium"
+        >
+          + Add Note
+        </button>
+      ) : (
+        <div>
+          <div className="flex items-center justify-between mb-2">
+            <span className="text-[15px] font-semibold text-[var(--text-primary)]">Note</span>
+            <button
+              onClick={() => { setShowNotes(false); handleBlur(); }}
+              className="text-[13px] text-[var(--accent)]"
+            >
+              Done
+            </button>
+          </div>
+          <textarea
+            value={noteText}
+            onChange={(e) => setNoteText(e.target.value)}
+            onBlur={handleBlur}
+            placeholder="Optional observations, context, or reminders..."
+            className="w-full bg-[var(--bg-secondary)] rounded-[10px] p-3 text-[15px] text-[var(--text-primary)] placeholder:text-[var(--text-muted)] resize-none border-none outline-none"
+            rows={2}
+            autoFocus
+          />
+        </div>
+      )}
     </div>
   );
 }

@@ -1,6 +1,14 @@
-export function CoachPromise({ onAccept }) {
+export function CoachPromise({ onAccept, onBack }) {
   return (
     <div className="min-h-screen bg-[#0a0a0b] flex flex-col items-center justify-center p-5">
+      {onBack && (
+        <button
+          onClick={onBack}
+          className="absolute top-4 left-4 text-[15px] font-medium text-[#a1a1aa] hover:text-white py-1"
+        >
+          ← Home
+        </button>
+      )}
       <div className="max-w-md w-full text-center space-y-8">
         {/* Title */}
         <div>
@@ -57,7 +65,7 @@ export function CoachPromise({ onAccept }) {
 function PromiseItem({ text }) {
   return (
     <div className="flex items-center gap-3">
-      <svg className="w-5 h-5 text-[#1e40af] flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+      <svg className="w-5 h-5 text-[#facc15] flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M5 13l4 4L19 7" />
       </svg>
       <span className="text-[15px] text-white">{text}</span>

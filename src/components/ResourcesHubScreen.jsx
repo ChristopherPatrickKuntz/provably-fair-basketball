@@ -1,67 +1,87 @@
 import { useState } from 'react';
 import { Header } from './Header';
+import { DOMAINS } from '../data/domains';
 import { SCHOOL_STATEMENT, FAQ } from '../data/coachingResources';
 
 export function ResourcesHubScreen({ onBack }) {
-  const [expandedSection, setExpandedSection] = useState(null);
+  // Lead with the thing coaches look up most: how the tryout tool scores.
+  const [expandedSection, setExpandedSection] = useState('howRating');
+  const [copyStatus, setCopyStatus] = useState('idle');
+
+  const toggle = (id) => setExpandedSection(expandedSection === id ? null : id);
+
+  const handleCopyStatement = async () => {
+    try {
+      await navigator.clipboard.writeText(generateSchoolStatementText());
+      setCopyStatus('copied');
+    } catch {
+      setCopyStatus('error');
+    }
+    setTimeout(() => setCopyStatus('idle'), 2000);
+  };
 
   return (
     <div className="min-h-screen bg-[var(--bg-page)] flex flex-col">
-      <Header 
-        title="Resources" 
-        leftAction={onBack}
-        leftLabel="← Home"
-      />
+      <Header title="Quick Reference" leftAction={onBack} leftLabel="← Handbook" />
 
       <div className="flex-1 overflow-y-auto px-4 py-5">
         <div className="max-w-lg mx-auto space-y-3">
-          
-          {/* Philosophy */}
+          <p className="text-[14px] text-[var(--text-secondary)] px-1 mb-1">
+            The essentials, for quick lookup during tryouts and practice.
+          </p>
+
+          {/* How rating works - the core of the tool, open by default */}
           <ResourceCard
-            title="Coaching Philosophy"
-            icon="📖"
-            isExpanded={expandedSection === 'philosophy'}
-            onToggle={() => setExpandedSection(expandedSection === 'philosophy' ? null : 'philosophy')}
+            title="How rating works"
+            icon="⭐"
+            isExpanded={expandedSection === 'howRating'}
+            onToggle={() => toggle('howRating')}
           >
             <div className="space-y-4">
-              <QuoteBlock>
-                "We're not here to build basketball players. We're here to build people. Basketball is just the tool."
-              </QuoteBlock>
-              
-              <Section title="Core Beliefs">
-                <ul className="space-y-2">
-                  <BulletPoint>Every kid deserves a fair chance</BulletPoint>
-                  <BulletPoint>Effort and attitude matter most</BulletPoint>
-                  <BulletPoint>Skills are teachable, character is foundational</BulletPoint>
-                  <BulletPoint>Structure creates safety for growth</BulletPoint>
-                  <BulletPoint>Development over winning (but we still compete)</BulletPoint>
-                </ul>
+              <Section title="The 4 ratings">
+                <div className="space-y-2">
+                  <RatingRow label="Skip" desc="You didn't get to see this. Don't guess." color="var(--text-muted)" />
+                  <RatingRow label="Needs Work" desc="Below what's typical for this age" color="var(--rating-needs-work)" />
+                  <RatingRow label="OK" desc="About what you'd expect" color="var(--rating-ok)" />
+                  <RatingRow label="Good" desc="Stands out, ready for more" color="var(--rating-good)" />
+                </div>
               </Section>
 
-              <Section title="What This Means">
-                <ul className="space-y-2">
-                  <BulletPoint>Rate what you see, not what you assume</BulletPoint>
-                  <BulletPoint>Give every player meaningful feedback</BulletPoint>
-                  <BulletPoint>Place kids where they can grow, not just where they're "good enough"</BulletPoint>
-                  <BulletPoint>Teach the game properly—fundamentals first</BulletPoint>
-                </ul>
+              <Section title="The 6 things you rate">
+                <div className="grid grid-cols-2 gap-2">
+                  {DOMAINS.map((d) => (
+                    <DomainChip key={d.id} name={d.name} weight={`${d.weight}×`} />
+                  ))}
+                </div>
+                <p className="text-[12px] text-[var(--text-muted)] mt-2 leading-snug">
+                  Higher weight counts more toward the score. Effort counts most, then the two
+                  character domains (Coachable, Teammate), because those matter more than raw skill at this age.
+                </p>
               </Section>
+
+              <div className="bg-[var(--accent-light)] rounded-[10px] p-3">
+                <p className="text-[13px] text-[var(--text-secondary)]">
+                  While rating, tap any domain to see exactly what to look for and the red flags. You don't
+                  need to know basketball, the app tells you what to watch.
+                </p>
+              </div>
             </div>
           </ResourceCard>
 
-          {/* Developmental Contract */}
+          {/* Readiness Ladder - the one home for "what to teach, in order" */}
           <ResourceCard
-            title="Developmental Contract"
-            icon="📋"
-            isExpanded={expandedSection === 'developmental'}
-            onToggle={() => setExpandedSection(expandedSection === 'developmental' ? null : 'developmental')}
+            title="What to teach, in order"
+            icon="🪜"
+            isExpanded={expandedSection === 'ladder'}
+            onToggle={() => toggle('ladder')}
           >
             <div className="space-y-4">
               <QuoteBlock>
-                Ball control precedes court awareness. Court awareness precedes decision-making. Decision-making precedes systems.
+                Ball control comes before court awareness. Court awareness comes before decision-making.
+                Decision-making comes before set plays.
               </QuoteBlock>
 
-              <Section title="Readiness Ladder">
+              <Section title="Readiness ladder">
                 <div className="space-y-2">
                   <LevelRow level="A" focus="Ball control + balance" examples="Dribble control, passing accuracy, jump stops" />
                   <LevelRow level="B" focus="Spacing + simple movement" examples="Pass and cut, fill spots, basic spacing" />
@@ -71,47 +91,11 @@ export function ResourcesHubScreen({ onBack }) {
                 </div>
               </Section>
 
-              <Section title="Key Rule">
+              <Section title="The one rule">
                 <div className="bg-[var(--accent-light)] rounded-[10px] p-3">
                   <p className="text-[15px] text-[var(--accent)] font-medium">
-                    You do not advance levels until the previous level is observable without prompting.
+                    Don't move up a level until the players can do the level below without you reminding them.
                   </p>
-                </div>
-              </Section>
-            </div>
-          </ResourceCard>
-
-          {/* Age Expectations */}
-          <ResourceCard
-            title="Age-Appropriate Expectations"
-            icon="👶"
-            isExpanded={expandedSection === 'age'}
-            onToggle={() => setExpandedSection(expandedSection === 'age' ? null : 'age')}
-          >
-            <div className="space-y-4">
-              <Section title="Middle School (Grades 6-8)">
-                <div className="bg-[var(--bg-secondary)] rounded-[10px] p-3 space-y-2">
-                  <p className="text-[13px] text-[var(--text-muted)] uppercase tracking-wide">Focus</p>
-                  <p className="text-[15px] text-[var(--text-primary)]">Engagement, enthusiasm, fundamentals</p>
-                  <p className="text-[13px] text-[var(--text-muted)] mt-2 uppercase tracking-wide">Priorities</p>
-                  <ul className="space-y-1">
-                    <li className="text-[15px] text-[var(--text-primary)]">• Effort and attitude above skill</li>
-                    <li className="text-[15px] text-[var(--text-primary)]">• Basic movement patterns</li>
-                    <li className="text-[15px] text-[var(--text-primary)]">• Positive relationship with sport</li>
-                  </ul>
-                </div>
-              </Section>
-
-              <Section title="High School (Grades 9-12)">
-                <div className="bg-[var(--bg-secondary)] rounded-[10px] p-3 space-y-2">
-                  <p className="text-[13px] text-[var(--text-muted)] uppercase tracking-wide">Focus</p>
-                  <p className="text-[15px] text-[var(--text-primary)]">Consistency, competitive readiness, leadership</p>
-                  <p className="text-[13px] text-[var(--text-muted)] mt-2 uppercase tracking-wide">Priorities</p>
-                  <ul className="space-y-1">
-                    <li className="text-[15px] text-[var(--text-primary)]">• Reliability under pressure</li>
-                    <li className="text-[15px] text-[var(--text-primary)]">• Team-first decision making</li>
-                    <li className="text-[15px] text-[var(--text-primary)]">• Physical and mental preparation</li>
-                  </ul>
                 </div>
               </Section>
             </div>
@@ -119,57 +103,27 @@ export function ResourcesHubScreen({ onBack }) {
 
           {/* Privacy */}
           <ResourceCard
-            title="Privacy & Data"
+            title="Privacy & data"
             icon="🔒"
             isExpanded={expandedSection === 'privacy'}
-            onToggle={() => setExpandedSection(expandedSection === 'privacy' ? null : 'privacy')}
+            onToggle={() => toggle('privacy')}
           >
             <div className="space-y-4">
-              <Section title="How We Protect Players">
+              <Section title="How players are protected">
                 <ul className="space-y-2">
-                  <BulletPoint>No names stored in the app—numbers only</BulletPoint>
-                  <BulletPoint>Paper attendance sheet links numbers to names</BulletPoint>
-                  <BulletPoint>School controls the paper, coach controls the app</BulletPoint>
-                  <BulletPoint>All data stays on your device (localStorage)</BulletPoint>
-                  <BulletPoint>No cloud sync, no external servers</BulletPoint>
+                  <BulletPoint>No names in the app, jersey numbers only</BulletPoint>
+                  <BulletPoint>A paper attendance sheet links numbers to names</BulletPoint>
+                  <BulletPoint>The school controls the paper, the coach controls the app</BulletPoint>
+                  <BulletPoint>Everything stays on your device, nothing is uploaded</BulletPoint>
+                  <BulletPoint>No accounts, no cloud, no external servers</BulletPoint>
                 </ul>
               </Section>
 
-              <Section title="Export Responsibility">
+              <Section title="Your responsibility">
                 <div className="bg-[var(--rating-ok)]/10 border border-[var(--rating-ok)]/30 rounded-[10px] p-3">
                   <p className="text-[15px] text-[var(--text-primary)]">
-                    When you copy results, you're responsible for how that data is stored and shared. Keep it secure.
+                    When you copy or print results, you're responsible for how that is stored and shared. Keep it secure.
                   </p>
-                </div>
-              </Section>
-            </div>
-          </ResourceCard>
-
-          {/* Quick Reference */}
-          <ResourceCard
-            title="Quick Reference"
-            icon="⚡"
-            isExpanded={expandedSection === 'quick'}
-            onToggle={() => setExpandedSection(expandedSection === 'quick' ? null : 'quick')}
-          >
-            <div className="space-y-4">
-              <Section title="Rating Scale">
-                <div className="space-y-2">
-                  <RatingRow label="Skip" desc="Didn't observe this domain" color="var(--text-muted)" />
-                  <RatingRow label="Needs Work" desc="Below age-appropriate expectations" color="var(--rating-needs-work)" />
-                  <RatingRow label="OK" desc="Meets basic expectations" color="var(--rating-ok)" />
-                  <RatingRow label="Good" desc="Above expectations, ready for more" color="var(--rating-good)" />
-                </div>
-              </Section>
-
-              <Section title="6 Evaluation Domains">
-                <div className="grid grid-cols-2 gap-2">
-                  <DomainChip name="Effort" weight="2×" />
-                  <DomainChip name="Coachable" weight="2×" />
-                  <DomainChip name="Ball Skills" weight="1×" />
-                  <DomainChip name="Footwork" weight="1×" />
-                  <DomainChip name="Finishing" weight="1×" />
-                  <DomainChip name="Teammate" weight="1×" />
                 </div>
               </Section>
             </div>
@@ -177,10 +131,10 @@ export function ResourcesHubScreen({ onBack }) {
 
           {/* FAQ */}
           <ResourceCard
-            title="FAQ"
+            title="Common questions"
             icon="❓"
             isExpanded={expandedSection === 'faq'}
-            onToggle={() => setExpandedSection(expandedSection === 'faq' ? null : 'faq')}
+            onToggle={() => toggle('faq')}
           >
             <div className="space-y-3">
               {FAQ.map((item) => (
@@ -191,18 +145,18 @@ export function ResourcesHubScreen({ onBack }) {
 
           {/* School Statement */}
           <ResourceCard
-            title="School Statement Template"
+            title="Statement for your school"
             icon="🏫"
             isExpanded={expandedSection === 'school'}
-            onToggle={() => setExpandedSection(expandedSection === 'school' ? null : 'school')}
+            onToggle={() => toggle('school')}
           >
             <div className="space-y-4">
               <div className="bg-[var(--accent-light)] rounded-[10px] p-3">
                 <p className="text-[13px] text-[var(--accent)]">
-                  Copy-paste template for principals and athletic directors to share with parents or board members.
+                  A ready-to-send note for principals and athletic directors to share with parents or the board.
                 </p>
               </div>
-              
+
               <div className="bg-[var(--bg-secondary)] rounded-[10px] p-4">
                 <h4 className="text-[15px] font-semibold text-[var(--text-primary)] mb-2">
                   {SCHOOL_STATEMENT.title}
@@ -210,7 +164,7 @@ export function ResourcesHubScreen({ onBack }) {
                 <p className="text-[13px] text-[var(--text-secondary)] mb-4">
                   {SCHOOL_STATEMENT.intro}
                 </p>
-                
+
                 {SCHOOL_STATEMENT.sections.map((section, i) => (
                   <div key={i} className="mb-4">
                     <p className="text-[13px] font-semibold text-[var(--text-primary)] mb-1">
@@ -238,25 +192,24 @@ export function ResourcesHubScreen({ onBack }) {
                     )}
                   </div>
                 ))}
-                
+
                 <p className="text-[12px] text-[var(--text-muted)] whitespace-pre-line mt-4 pt-4 border-t border-[var(--bg-page)]">
                   {SCHOOL_STATEMENT.signature}
                 </p>
               </div>
 
               <button
-                onClick={() => {
-                  const text = generateSchoolStatementText();
-                  navigator.clipboard.writeText(text);
-                  alert('Copied to clipboard!');
-                }}
-                className="w-full py-2.5 bg-[var(--accent)] text-white rounded-[10px] text-[14px] font-medium"
+                onClick={handleCopyStatement}
+                className={`w-full py-2.5 rounded-[10px] text-[14px] font-medium transition-colors ${
+                  copyStatus === 'copied'
+                    ? 'bg-[var(--rating-good)] text-white'
+                    : 'bg-[var(--accent)] text-white'
+                }`}
               >
-                Copy Statement to Clipboard
+                {copyStatus === 'copied' ? '✓ Copied' : copyStatus === 'error' ? 'Copy failed, select manually' : 'Copy statement'}
               </button>
             </div>
           </ResourceCard>
-
         </div>
       </div>
     </div>
@@ -266,7 +219,7 @@ export function ResourcesHubScreen({ onBack }) {
 function generateSchoolStatementText() {
   let text = `${SCHOOL_STATEMENT.title}\n\n`;
   text += `${SCHOOL_STATEMENT.intro}\n\n`;
-  
+
   SCHOOL_STATEMENT.sections.forEach(section => {
     text += `${section.heading.toUpperCase()}\n`;
     if (section.content) text += `${section.content}\n`;
@@ -278,14 +231,14 @@ function generateSchoolStatementText() {
     if (section.closing) text += `\n${section.closing}\n`;
     text += '\n';
   });
-  
+
   text += `${SCHOOL_STATEMENT.signature}`;
   return text;
 }
 
 function FAQItem({ question, answer }) {
   const [isOpen, setIsOpen] = useState(false);
-  
+
   return (
     <div className="border-b border-[var(--bg-secondary)] pb-3 last:border-0 last:pb-0">
       <button
@@ -293,7 +246,7 @@ function FAQItem({ question, answer }) {
         className="w-full text-left flex items-start justify-between gap-2"
       >
         <span className="text-[14px] font-medium text-[var(--text-primary)]">{question}</span>
-        <svg 
+        <svg
           className={`w-4 h-4 text-[var(--text-muted)] flex-shrink-0 mt-0.5 transition-transform ${isOpen ? 'rotate-180' : ''}`}
           fill="none" stroke="currentColor" viewBox="0 0 24 24"
         >
@@ -318,7 +271,7 @@ function ResourceCard({ title, icon, isExpanded, onToggle, children }) {
           <span className="text-xl">{icon}</span>
           <span className="text-[17px] font-medium text-[var(--text-primary)]">{title}</span>
         </div>
-        <svg 
+        <svg
           className={`w-5 h-5 text-[var(--text-muted)] transition-transform ${isExpanded ? 'rotate-180' : ''}`}
           fill="none" stroke="currentColor" viewBox="0 0 24 24"
         >
@@ -378,8 +331,8 @@ function LevelRow({ level, focus, examples }) {
 function RatingRow({ label, desc, color }) {
   return (
     <div className="flex items-center gap-3">
-      <span className="text-[15px] font-semibold" style={{ color }}>{label}</span>
-      <span className="text-[13px] text-[var(--text-muted)]">— {desc}</span>
+      <span className="text-[15px] font-semibold min-w-[92px]" style={{ color }}>{label}</span>
+      <span className="text-[13px] text-[var(--text-muted)]">{desc}</span>
     </div>
   );
 }
