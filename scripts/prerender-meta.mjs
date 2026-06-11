@@ -50,10 +50,10 @@ const ROUTES = [
     path: '/handbook/practice',
     title: 'Practice Toolkit and Drill Library | Provably Fair Basketball',
     description:
-      'A 90-minute practice template, ready-to-run quick sessions, and a drill library with difficulty levels, coaching points, and printable plans for youth basketball.',
+      'A 90-minute practice template, ready-to-run quick sessions, a full drill library, and a builder to create, save, and print your own practice plans.',
     h1: 'Practice Toolkit and Drill Library',
     blurb:
-      'A repeatable 90-minute practice template, ready-to-run quick sessions for short practices and game days, and a drill library with setup steps, coaching points, common mistakes, and difficulty levels. Everything prints.',
+      'A repeatable 90-minute practice template, ready-to-run quick sessions, and a drill library with setup steps, coaching points, and difficulty levels. Build and save your own practice plans from the template, print them, and use them across your season. Everything stays on your device.',
   },
   {
     path: '/handbook/guide',

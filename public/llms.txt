@@ -8,7 +8,7 @@ Provably Fair Basketball is a free web app for youth basketball coaches (middle 
 
 - **Tryout Evaluation**: Rate players by jersey number across 6 weighted areas (Effort, Coachable, Ball Skills, Footwork, Finishing, Teammate). The app auto-scores and ranks players. Student names are never stored in the app; a paper sheet links numbers to names, so tryouts are objective and student-protective.
 - **Start Here**: A 5-step guided path for brand-new coaches (mindset, first practice, tryouts, season plan, talking with parents).
-- **Coaching Handbook**: A customizable season plan (set your own start date, season length, and a movable mid-season break), a practice toolkit (90-minute template, drill library, ready-to-run quick sessions), a complete new-coach guide (mindset, age-appropriate development, common coaching traps, checklists), copy-paste parent email templates, and a quick reference for the rating system.
+- **Coaching Handbook**: A customizable season plan (set your own start date, season length, and a movable mid-season break), a practice toolkit (90-minute template, drill library, ready-to-run quick sessions, and a builder to create and save your own practice plans), a complete new-coach guide (mindset, age-appropriate development, common coaching traps, checklists), copy-paste parent email templates, and a quick reference for the rating system.
 
 ## Who it is for
 

@@ -1258,7 +1258,7 @@ export const FAQ = [
   {
     id: 'practice-toolkit',
     question: 'What\'s in the Practice Toolkit?',
-    answer: 'A library of drills organized by skill, difficulty, and equipment needed. Plus quick session templates for common situations (short practice, game day warmup, etc.). Everything is printable.'
+    answer: 'A library of drills organized by skill, difficulty, and equipment needed, plus quick session templates for common situations (short practice, game day warmup, etc.). You can also build and save your own practice plans (My Plans): start from the proven template, drop in drills or notes, then print them or use them on open weeks of your season plan. Everything is printable.'
   },
   {
     id: 'is-this-free',

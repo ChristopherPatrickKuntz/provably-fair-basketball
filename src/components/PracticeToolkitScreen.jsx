@@ -1,12 +1,34 @@
 import { useState } from 'react';
+import { useSearchParams } from 'react-router-dom';
 import { Header } from './Header';
 import { DRILL_CATEGORIES, DRILLS, PRACTICE_TEMPLATE, QUICK_SESSIONS, DIFFICULTY_LEVELS } from '../data/drills';
+import { MyPlansView, PlanEditorScreen } from './MyPlansView';
+import { createPlan } from '../utils/customPlans';
 
-export function PracticeToolkitScreen({ onBack }) {
-  const [activeTab, setActiveTab] = useState('template');
+const TABS = ['template', 'quick', 'drills', 'plans'];
+
+export function PracticeToolkitScreen({ onBack, customPlans, onSavePlan, onDeletePlan }) {
+  const [searchParams] = useSearchParams();
+  const [activeTab, setActiveTab] = useState(() => {
+    const t = searchParams.get('tab');
+    return TABS.includes(t) ? t : 'template';
+  });
   const [selectedCategory, setSelectedCategory] = useState(null);
   const [selectedDrill, setSelectedDrill] = useState(null);
   const [selectedQuickSession, setSelectedQuickSession] = useState(null);
+  // When set, the plan editor takes over the screen (its own header and Save).
+  const [editorPlan, setEditorPlan] = useState(null);
+
+  if (editorPlan) {
+    return (
+      <PlanEditorScreen
+        initialPlan={editorPlan}
+        onSave={onSavePlan}
+        onDelete={customPlans?.[editorPlan.id] ? onDeletePlan : undefined}
+        onClose={() => setEditorPlan(null)}
+      />
+    );
+  }
 
   return (
     <div className="min-h-screen bg-[var(--bg-page)] flex flex-col">
@@ -19,23 +41,29 @@ export function PracticeToolkitScreen({ onBack }) {
       {/* Tab Bar */}
       <div className="bg-[var(--bg-card)] px-2 py-2 shadow-[var(--shadow-card)]">
         <div className="max-w-lg mx-auto flex gap-1">
-          <TabButton 
-            active={activeTab === 'template'} 
+          <TabButton
+            active={activeTab === 'template'}
             onClick={() => setActiveTab('template')}
           >
             Template
           </TabButton>
-          <TabButton 
-            active={activeTab === 'quick'} 
+          <TabButton
+            active={activeTab === 'quick'}
             onClick={() => setActiveTab('quick')}
           >
-            Quick Sessions
+            Sessions
           </TabButton>
-          <TabButton 
-            active={activeTab === 'drills'} 
+          <TabButton
+            active={activeTab === 'drills'}
             onClick={() => setActiveTab('drills')}
           >
-            Drill Library
+            Drills
+          </TabButton>
+          <TabButton
+            active={activeTab === 'plans'}
+            onClick={() => setActiveTab('plans')}
+          >
+            My Plans
           </TabButton>
         </div>
       </div>
@@ -49,11 +77,18 @@ export function PracticeToolkitScreen({ onBack }) {
           />
         )}
         {activeTab === 'drills' && (
-          <DrillLibraryView 
+          <DrillLibraryView
             selectedCategory={selectedCategory}
             setSelectedCategory={setSelectedCategory}
             selectedDrill={selectedDrill}
             setSelectedDrill={setSelectedDrill}
+          />
+        )}
+        {activeTab === 'plans' && (
+          <MyPlansView
+            plans={customPlans}
+            onNew={() => setEditorPlan(createPlan(90))}
+            onEdit={(plan) => setEditorPlan(JSON.parse(JSON.stringify(plan)))}
           />
         )}
       </div>

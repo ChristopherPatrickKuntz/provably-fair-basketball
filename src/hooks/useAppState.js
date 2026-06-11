@@ -165,6 +165,38 @@ export function useAppState() {
     save({ ...state, ...partial });
   }, [state, save]);
 
+  const savePlan = useCallback((plan) => {
+    if (!state) return;
+    save({
+      ...state,
+      customPlans: {
+        ...(state.customPlans || {}),
+        [plan.id]: { ...plan, updatedAt: new Date().toISOString() }
+      }
+    });
+  }, [state, save]);
+
+  const deletePlan = useCallback((planId) => {
+    if (!state) return;
+    const { [planId]: _removed, ...remainingPlans } = state.customPlans || {};
+    // Clear any season-week assignments that pointed at the deleted plan.
+    const weekPlans = Object.fromEntries(
+      Object.entries(state.weekPlans || {}).filter(([, id]) => id !== planId)
+    );
+    save({ ...state, customPlans: remainingPlans, weekPlans });
+  }, [state, save]);
+
+  const assignWeekPlan = useCallback((weekId, planId) => {
+    if (!state) return;
+    const weekPlans = { ...(state.weekPlans || {}) };
+    if (planId) {
+      weekPlans[weekId] = planId;
+    } else {
+      delete weekPlans[weekId];
+    }
+    save({ ...state, weekPlans });
+  }, [state, save]);
+
   const activeSession = state?.activeSessionId ? state.sessions[state.activeSessionId] : null;
 
   return {
@@ -174,6 +206,9 @@ export function useAppState() {
     seasonStartDate: state?.seasonStartDate ?? null,
     setSeasonStartDate,
     updateSeasonSettings,
+    savePlan,
+    deletePlan,
+    assignWeekPlan,
     activeSession,
     acceptPromise,
     startSession,

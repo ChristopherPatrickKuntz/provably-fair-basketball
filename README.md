@@ -31,7 +31,7 @@ I built this for my kids' school in Moose Jaw to reduce the overwhelm of becomin
 - **Start Here**, a 5-step guided path for brand-new coaches (mindset, first practice, tryouts, season plan, talking with parents). No basketball background needed.
 - **Tryout Evaluation**, rate players by jersey number across 6 weighted areas (Effort, Coachable, Ball Skills, Footwork, Finishing, Teammate). Auto-scored and ranked, with partial-coverage flagging so a one-domain score cannot outrank a fully rated player. Numbers only, no student names stored.
 - **Customizable Season Plan**, set your start date, number of weeks, and a movable or removable mid-season break. Every week date and the season end compute from your start, for any month or season.
-- **Practice Toolkit**, a 90-minute template (with a 60-minute option), a drill library, and ready-to-run quick sessions. Practice plans are printable.
+- **Practice Toolkit**, a 90-minute template (with a 60-minute option), a drill library, and ready-to-run quick sessions. Build and save your own practice plans from the template, print them, and use them on open weeks of your season plan.
 - **Coaching Handbook**, a complete new-coach guide: the essentials, basketball basics with a plain-English glossary, age-appropriate development (LTAD), common pitfalls, parent email templates, and checklists.
 - **Printable Attendance Sheet**, the paper-only link between names and jersey numbers.
 - **Tryout Agenda PDF**, a structured tryout flow covering all skill areas.

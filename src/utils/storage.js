@@ -9,7 +9,10 @@ const DEFAULT_STATE = {
   seasonWeeks: 12,
   seasonBreakAfter: 2,
   seasonBreakWeeks: 2,
-  sessions: {}
+  sessions: {},
+  // Coach-authored practice plans, and which open season week uses which plan.
+  customPlans: {},
+  weekPlans: {}
 };
 
 export function loadState() {

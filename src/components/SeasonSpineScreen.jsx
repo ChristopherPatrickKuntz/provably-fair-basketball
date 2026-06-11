@@ -1,4 +1,6 @@
 import { useState, useEffect, useRef } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { planToPracticePlan } from '../utils/customPlans';
 import { Header } from './Header';
 import { SEASON_PHASES, LEAGUE_RULES } from '../data/seasonPlan';
 import { DRILLS } from '../data/drills';
@@ -49,7 +51,7 @@ function buildSeasonSchedule({ weeks, breakAfter, breakWeeks }) {
   return { items, endIndex };
 }
 
-export function SeasonSpineScreen({ onBack, season, onUpdateSeason }) {
+export function SeasonSpineScreen({ onBack, season, onUpdateSeason, customPlans = {}, weekPlans = {}, onAssignWeekPlan }) {
   const [selectedItem, setSelectedItem] = useState(null);
   const [showRules, setShowRules] = useState(false);
 
@@ -60,13 +62,25 @@ export function SeasonSpineScreen({ onBack, season, onUpdateSeason }) {
     breakWeeks: season.breakWeeks,
   });
 
-  // If a week is selected, show its practice plan
+  // If a week is selected, show its practice plan. Weeks without a built-in
+  // plan can use one of the coach's own saved plans, which then renders,
+  // taps into drill details, and prints exactly like a built-in plan.
   if (selectedItem) {
+    const week = selectedItem.week;
+    const hasBuiltIn = week.practicePlans && week.practicePlans.length > 0;
+    const assignedPlan = !hasBuiltIn && weekPlans[week.id] ? customPlans[weekPlans[week.id]] : null;
+    const effectiveWeek = assignedPlan
+      ? { ...week, practicePlans: [planToPracticePlan(assignedPlan)] }
+      : week;
     return (
       <PracticePlanView
-        week={selectedItem.week}
+        week={effectiveWeek}
         displayDates={start ? formatWeekRange(start, selectedItem.index) : null}
         onBack={() => setSelectedItem(null)}
+        customPlanName={assignedPlan ? assignedPlan.name : null}
+        onRemoveCustomPlan={assignedPlan && onAssignWeekPlan ? () => onAssignWeekPlan(week.id, null) : undefined}
+        customPlans={customPlans}
+        onUsePlan={!hasBuiltIn && onAssignWeekPlan ? (planId) => onAssignWeekPlan(week.id, planId) : undefined}
       />
     );
   }
@@ -284,9 +298,14 @@ function WeekCard({ week, displayDates, onTap }) {
   );
 }
 
-function PracticePlanView({ week, displayDates, onBack }) {
+function PracticePlanView({ week, displayDates, onBack, customPlanName, onRemoveCustomPlan, customPlans, onUsePlan }) {
   const [selectedDay, setSelectedDay] = useState(0);
+  const navigate = useNavigate();
   const practicePlan = week.practicePlans?.[selectedDay];
+  const planMinutes = practicePlan?.minutes || 90;
+  const myPlans = Object.values(customPlans || {}).sort(
+    (a, b) => new Date(b.updatedAt) - new Date(a.updatedAt)
+  );
 
   const printPlan = () => {
     if (!practicePlan) return;
@@ -303,7 +322,7 @@ function PracticePlanView({ week, displayDates, onBack }) {
       )
       .join('');
     win.document.write(
-      `<!DOCTYPE html><html><head><meta charset="UTF-8"><title>${esc(week.name)} - Day ${practicePlan.day}</title></head><body style="font-family:-apple-system,BlinkMacSystemFont,sans-serif;max-width:700px;margin:0 auto;padding:24px;color:#1D1D1F"><h1 style="font-size:20px;color:#007AFF;margin:0 0 4px">${esc(week.name)}</h1><p style="color:#666;margin:0 0 4px">${displayDates ? esc(displayDates) + ' &middot; ' : ''}Day ${practicePlan.day} &middot; 90 minutes</p><p style="font-style:italic;color:#007AFF;margin:0 0 16px">"${esc(week.language)}"</p><table style="width:100%;border-collapse:collapse;font-size:13px">${rows}</table><p style="margin-top:24px;color:#999;font-size:11px">Provably Fair Basketball &middot; cpk.solutions</p></body></html>`
+      `<!DOCTYPE html><html><head><meta charset="UTF-8"><title>${esc(week.name)} - Day ${practicePlan.day}</title></head><body style="font-family:-apple-system,BlinkMacSystemFont,sans-serif;max-width:700px;margin:0 auto;padding:24px;color:#1D1D1F"><h1 style="font-size:20px;color:#007AFF;margin:0 0 4px">${esc(week.name)}</h1><p style="color:#666;margin:0 0 4px">${displayDates ? esc(displayDates) + ' &middot; ' : ''}Day ${practicePlan.day} &middot; ${planMinutes} minutes</p><p style="font-style:italic;color:#007AFF;margin:0 0 16px">"${esc(week.language)}"</p><table style="width:100%;border-collapse:collapse;font-size:13px">${rows}</table><p style="margin-top:24px;color:#999;font-size:11px">Provably Fair Basketball &middot; cpk.solutions</p></body></html>`
     );
     win.document.close();
     win.focus();
@@ -329,6 +348,22 @@ function PracticePlanView({ week, displayDates, onBack }) {
           </p>
         </div>
       </div>
+
+      {/* Coach's own plan in use on this open week */}
+      {customPlanName && (
+        <div className="bg-[var(--bg-card)] border-b border-[var(--bg-secondary)] px-4 py-2.5">
+          <div className="max-w-lg mx-auto flex items-center justify-between gap-2">
+            <p className="text-[13px] text-[var(--text-secondary)] min-w-0 truncate">
+              Using your plan: <strong className="text-[var(--text-primary)]">{customPlanName}</strong>
+            </p>
+            {onRemoveCustomPlan && (
+              <button onClick={onRemoveCustomPlan} className="text-[13px] text-[var(--accent)] font-medium flex-shrink-0">
+                Remove
+              </button>
+            )}
+          </div>
+        </div>
+      )}
 
       {/* Day Tabs */}
       {week.practicePlans && week.practicePlans.length > 0 && (
@@ -373,19 +408,53 @@ function PracticePlanView({ week, displayDates, onBack }) {
           {practicePlan ? (
             <div className="space-y-2">
               <p className="text-[12px] text-[var(--text-muted)] uppercase tracking-wide mb-2 px-1">
-                Practice Plan - Day {practicePlan.day} (90 min)
+                Practice Plan - Day {practicePlan.day} ({planMinutes} min)
               </p>
               {practicePlan.blocks.map((block, i) => (
                 <PracticeBlock key={i} block={block} />
               ))}
             </div>
           ) : (
-            <div className="bg-[var(--bg-card)] rounded-[var(--radius)] shadow-[var(--shadow-card)] p-6 text-center">
-              <p className="text-[40px] mb-3">📋</p>
-              <p className="text-[15px] text-[var(--text-primary)] font-medium mb-1">No Practice Plan Yet</p>
-              <p className="text-[13px] text-[var(--text-muted)]">
-                This week's practice plan is being developed. Use the skills list above as a guide.
-              </p>
+            <div className="space-y-4">
+              <div className="bg-[var(--bg-card)] rounded-[var(--radius)] shadow-[var(--shadow-card)] p-6 text-center">
+                <p className="text-[40px] mb-3">📋</p>
+                <p className="text-[15px] text-[var(--text-primary)] font-medium mb-1">Open Practice Week</p>
+                <p className="text-[13px] text-[var(--text-muted)]">
+                  No set plan for this week. Use the skills list above as a guide, or drop in one
+                  of your own practice plans.
+                </p>
+              </div>
+
+              {onUsePlan && myPlans.length > 0 && (
+                <div>
+                  <p className="text-[12px] text-[var(--text-muted)] uppercase tracking-wide mb-2 px-1">
+                    Use one of your plans
+                  </p>
+                  <div className="space-y-2">
+                    {myPlans.map((plan) => (
+                      <button
+                        key={plan.id}
+                        onClick={() => onUsePlan(plan.id)}
+                        className="w-full bg-[var(--bg-card)] rounded-[var(--radius)] shadow-[var(--shadow-card)] p-4 text-left flex items-center justify-between gap-2 active:scale-[0.98] transition-transform"
+                      >
+                        <span className="text-[15px] font-medium text-[var(--text-primary)] min-w-0 truncate">
+                          {plan.name}
+                        </span>
+                        <span className="text-[13px] text-[var(--text-muted)] flex-shrink-0">{plan.minutes} min</span>
+                      </button>
+                    ))}
+                  </div>
+                </div>
+              )}
+
+              {onUsePlan && (
+                <button
+                  onClick={() => navigate('/handbook/practice?tab=plans')}
+                  className="w-full py-3 bg-[var(--accent)] text-white rounded-[var(--radius)] text-[15px] font-semibold active:scale-[0.98] transition-transform"
+                >
+                  Build a plan in the Practice Toolkit
+                </button>
+              )}
             </div>
           )}
         </div>

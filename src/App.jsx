@@ -42,6 +42,9 @@ function App() {
     saveStatus,
     storageAvailable,
     updateSeasonSettings,
+    savePlan,
+    deletePlan,
+    assignWeekPlan,
     activeSession,
     acceptPromise,
     startSession,
@@ -209,9 +212,19 @@ function App() {
             breakWeeks: state.seasonBreakWeeks ?? 2,
           }}
           onUpdateSeason={updateSeasonSettings}
+          customPlans={state.customPlans || {}}
+          weekPlans={state.weekPlans || {}}
+          onAssignWeekPlan={assignWeekPlan}
         />
       } />
-      <Route path="/handbook/practice" element={<PracticeToolkitScreen onBack={() => navigate('/handbook')} />} />
+      <Route path="/handbook/practice" element={
+        <PracticeToolkitScreen
+          onBack={() => navigate('/handbook')}
+          customPlans={state.customPlans || {}}
+          onSavePlan={savePlan}
+          onDeletePlan={deletePlan}
+        />
+      } />
       <Route path="/handbook/guide" element={<NewCoachGuideScreen onBack={() => navigate('/handbook')} />} />
       <Route path="/handbook/reference" element={<ResourcesHubScreen onBack={() => navigate('/handbook')} />} />
 

@@ -11,7 +11,7 @@ const SECTIONS = [
     id: 'practice',
     icon: '🏋️',
     title: 'Practice Toolkit',
-    description: '90-minute template, full drill library, and ready-to-run quick sessions.',
+    description: '90-minute template, drill library, quick sessions, and your own saved plans.',
   },
   {
     id: 'guide',
