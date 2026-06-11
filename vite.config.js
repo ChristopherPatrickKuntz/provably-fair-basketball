@@ -19,7 +19,6 @@ export default defineConfig({
         'apple-touch-icon.png',
         'logo-192.png',
         'logo-512.png',
-        'basketball.svg',
         'tryout-agenda.pdf',
       ],
       manifest: {
