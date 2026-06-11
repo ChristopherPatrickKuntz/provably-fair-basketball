@@ -1,12 +1,16 @@
 # Provably Fair Basketball
 
-A privacy-first toolkit for youth basketball coaches: tryout evaluation, season planning, practice resources, and parent communication.
+A free, privacy-first toolkit for youth basketball coaches, built especially for the parent or teacher who gets pulled in to coach with no basketball background. It covers fair tryout evaluation, a customizable season plan, practice resources, and parent communication.
 
 **Live tool:** https://provablyfairbasketball.com/
+
+It works offline and installs like an app (PWA).
 
 ---
 
 ## Screenshots
+
+> Note: these reflect an earlier version of the interface and will be refreshed.
 
 <p align="center">
   <img src="screenshots/home.jpg" width="250" alt="Home Screen" />
@@ -18,32 +22,31 @@ A privacy-first toolkit for youth basketball coaches: tryout evaluation, season 
 
 ## Why This Exists
 
-I built this for my kids' school to reduce the overwhelm of becoming a coach and to make tryouts more structured, transparent, and student-protective.
-
-I'm sharing it publicly in case it helps other coaches and schools.
+I built this for my kids' school in Moose Jaw to reduce the overwhelm of becoming a coach and to make tryouts more structured, transparent, and student-protective. I am sharing it publicly in case it helps other coaches and schools. The local examples are kept as a starting point; everything (dates, schedule, league rules) is meant to be adapted to your town.
 
 ---
 
 ## What It Includes
 
-- **Tryout Evaluation** — Rate players across 6 skill domains (numbers-only; no student names stored)
-- **Printable Attendance Sheet** — Paper-only link between names and jersey numbers
-- **Tryout Agenda PDF** — Structured tryout flow covering all skill domains
-- **12-Week Season Plan** — Weekly themes, practice plans, adjustable start date
-- **Practice Toolkit** — Drill library + quick session templates
-- **Parent Email Templates** — Copy-paste communication for common situations
-- **School Statement Template** — Ready-to-use admin statement for parents/board
-- **FAQ** — Answers for coaches, parents, and administrators
+- **Start Here**, a 5-step guided path for brand-new coaches (mindset, first practice, tryouts, season plan, talking with parents). No basketball background needed.
+- **Tryout Evaluation**, rate players by jersey number across 6 weighted areas (Effort, Coachable, Ball Skills, Footwork, Finishing, Teammate). Auto-scored and ranked, with partial-coverage flagging so a one-domain score cannot outrank a fully rated player. Numbers only, no student names stored.
+- **Customizable Season Plan**, set your start date, number of weeks, and a movable or removable mid-season break. Every week date and the season end compute from your start, for any month or season.
+- **Practice Toolkit**, a 90-minute template (with a 60-minute option), a drill library, and ready-to-run quick sessions. Practice plans are printable.
+- **Coaching Handbook**, a complete new-coach guide: the essentials, basketball basics with a plain-English glossary, age-appropriate development (LTAD), common pitfalls, parent email templates, and checklists.
+- **Printable Attendance Sheet**, the paper-only link between names and jersey numbers.
+- **Tryout Agenda PDF**, a structured tryout flow covering all skill areas.
+- **School Statement Template**, a ready-to-send note for principals and athletic directors.
+- **FAQ**, answers for coaches, parents, and administrators.
 
 ---
 
 ## Privacy Model
 
-This tool was designed with student privacy as a core constraint:
+This tool was designed with student privacy as a core constraint (EdTech compliance):
 
-- **No student names** are entered into the digital tool
-- **Data stays in your browser** (localStorage only)
-- **No accounts, no cloud storage, no external database**
+- **No student names** are entered into the app
+- **Data stays on your device** (browser localStorage only) and is wiped if you clear your browser, by design
+- **No accounts, no cloud storage, no external database, no tracking**
 - **Paper attendance sheet** is the only place names and numbers are linked
 
 The coach controls the app. The school controls the paper.
@@ -53,7 +56,9 @@ The coach controls the app. The school controls the paper.
 ## Tech Stack
 
 - React + Vite
+- React Router
 - Tailwind CSS
+- Offline PWA (vite-plugin-pwa service worker)
 - Deployed on Netlify
 
 ---
@@ -69,6 +74,12 @@ Build for production:
 
 ```bash
 npm run build
+```
+
+Lint:
+
+```bash
+npm run lint
 ```
 
 ---
