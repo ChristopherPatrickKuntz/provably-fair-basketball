@@ -100,10 +100,16 @@ for (const route of ROUTES) {
     .replace(/\n\s*<!-- Structured data -->\s*<script type="application\/ld\+json">[\s\S]*?<\/script>/, '')
     .replace('<div id="root"></div>', staticBlock(route.h1, route.blurb));
 
-  const file = join('dist', ...route.path.split('/').filter(Boolean), 'index.html');
-  mkdirSync(dirname(file), { recursive: true });
-  writeFileSync(file, out);
-  console.log(`prerendered ${route.path} -> ${file}`);
+  // Write both forms: <route>.html serves the exact non-slash URL (matching the
+  // sitemap and canonical) with a direct 200, and <route>/index.html covers
+  // trailing-slash requests. Netlify checks path.html before path/index.html.
+  const parts = route.path.split('/').filter(Boolean);
+  const flatFile = join('dist', ...parts.slice(0, -1), `${parts[parts.length - 1]}.html`);
+  const dirFile = join('dist', ...parts, 'index.html');
+  mkdirSync(dirname(dirFile), { recursive: true });
+  writeFileSync(flatFile, out);
+  writeFileSync(dirFile, out);
+  console.log(`prerendered ${route.path} -> ${flatFile} + ${dirFile}`);
 }
 
 // Homepage keeps its own head; just add the static fallback for no-JS crawlers.
