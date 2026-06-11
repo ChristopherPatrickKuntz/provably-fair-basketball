@@ -10,13 +10,18 @@ It works offline and installs like an app (PWA).
 
 ## Screenshots
 
-> Note: these reflect an earlier version of the interface and will be refreshed.
-
 <p align="center">
-  <img src="screenshots/home.jpg" width="250" alt="Home Screen" />
-  <img src="screenshots/tryout-setup.jpg" width="250" alt="Tryout Setup" />
-  <img src="screenshots/evaluate.jpg" width="250" alt="Player Evaluation" />
+  <img src="screenshots/home.png" width="250" alt="Home screen" />
+  <img src="screenshots/start-here.png" width="250" alt="Start Here, the 5-step path for new coaches" />
+  <img src="screenshots/evaluate.png" width="250" alt="Tryout evaluation by jersey number" />
 </p>
+<p align="center">
+  <img src="screenshots/results.png" width="250" alt="Ranked tryout results with fairness sorting" />
+  <img src="screenshots/season.png" width="250" alt="Customizable season plan" />
+  <img src="screenshots/plan-builder.png" width="250" alt="Practice plan builder" />
+</p>
+
+> Regenerate any time with `npm run screenshots` (drives local Chrome against the running app with seeded demo data).
 
 ---
 
