@@ -1,5 +1,5 @@
-import { lazy, Suspense } from 'react';
-import { Routes, Route, Navigate, useNavigate } from 'react-router-dom';
+import { lazy, Suspense, useEffect } from 'react';
+import { Routes, Route, Navigate, useNavigate, useLocation } from 'react-router-dom';
 import { useAppState } from './hooks/useAppState';
 import { HomeScreen } from './components/HomeScreen';
 import { HandbookScreen } from './components/HandbookScreen';
@@ -16,7 +16,27 @@ const PracticeToolkitScreen = lazy(() => import('./components/PracticeToolkitScr
 const ResourcesHubScreen = lazy(() => import('./components/ResourcesHubScreen').then((m) => ({ default: m.ResourcesHubScreen })));
 const NewCoachGuideScreen = lazy(() => import('./components/NewCoachGuideScreen').then((m) => ({ default: m.NewCoachGuideScreen })));
 
+// Per-route document titles so history, bookmarks, and search results name the
+// page, not just the app. Keep in sync with scripts/prerender-meta.mjs.
+const ROUTE_TITLES = {
+  '/': 'Provably Fair Basketball | Free Youth Basketball Tryout & Coaching Tool',
+  '/start': 'Start Here for New Coaches | Provably Fair Basketball',
+  '/tryout': 'Fair Tryout Evaluation Tool | Provably Fair Basketball',
+  '/tryout/evaluate': 'Tryout Evaluation | Provably Fair Basketball',
+  '/tryout/results': 'Tryout Results | Provably Fair Basketball',
+  '/handbook': 'Coaching Handbook | Provably Fair Basketball',
+  '/handbook/season': 'Customizable Season Plan | Provably Fair Basketball',
+  '/handbook/practice': 'Practice Toolkit and Drill Library | Provably Fair Basketball',
+  '/handbook/guide': "New Coach's Guide | Provably Fair Basketball",
+  '/handbook/reference': 'Quick Reference | Provably Fair Basketball',
+};
+
 function App() {
+  const location = useLocation();
+  useEffect(() => {
+    document.title = ROUTE_TITLES[location.pathname] || ROUTE_TITLES['/'];
+  }, [location.pathname]);
+
   const {
     state,
     saveStatus,
@@ -86,7 +106,7 @@ function App() {
             onGo={(target) =>
               navigate(
                 {
-                  mindset: '/handbook/guide',
+                  mindset: '/handbook/guide?section=guide',
                   practice: '/handbook/practice',
                   tryout: '/tryout',
                   season: '/handbook/season',

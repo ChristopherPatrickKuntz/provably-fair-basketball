@@ -41,7 +41,7 @@ export function SetupScreen({ sessions, onStartSession, onContinueSession, onDel
               </div>
               <div className="flex-1">
                 <p className="text-[14px] font-medium text-[var(--text-primary)]">Tryout Agenda</p>
-                <p className="text-[11px] text-[var(--text-muted)]">Covers all skill domains. Print for tryouts.</p>
+                <p className="text-[11px] text-[var(--text-muted)]">Covers all skill areas. Print for tryouts.</p>
               </div>
               <a
                 href="/tryout-agenda.pdf"
@@ -208,7 +208,7 @@ export function SetupScreen({ sessions, onStartSession, onContinueSession, onDel
                   👋 First time here?
                 </p>
                 <p className="text-[13px] text-[var(--text-secondary)]">
-                  Set your grade band and player count, then tap START. You'll rate each player across 6 domains.
+                  Set your grade band and player count, then tap START. You'll rate each player across 6 areas.
                 </p>
               </div>
             </div>

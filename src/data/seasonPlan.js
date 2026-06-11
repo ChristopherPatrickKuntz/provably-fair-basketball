@@ -259,7 +259,7 @@ export const SEASON_PHASES = [
             day: 1,
             blocks: [
               { time: '0:00', type: 'Warm-Up', activity: 'Shooting Flow', details: '' },
-              { time: '0:10', type: 'Huddle', activity: 'Intro: Zone Defense', details: '"Zone = protect areas, not players. We move as one."' },
+              { time: '0:10', type: 'Huddle', activity: 'Intro: Zone Defense', details: '"Zone = protect areas, not players. We move as one." Man-to-man stays our base; we learn zone to use it situationally and to know how to beat it.' },
               { time: '0:15', type: 'Skill', activity: 'Zone Positions', details: 'Walk through 2-3. Top two, bottom three.' },
               { time: '0:30', type: 'Skill', activity: 'Zone Shifts (5v0)', details: 'Coach passes ball around. Zone shifts on every pass.' },
               { time: '0:45', type: 'Skill', activity: 'Zone Shifts (5v5)', details: 'Offense passes (no shots). Defense shifts.' },

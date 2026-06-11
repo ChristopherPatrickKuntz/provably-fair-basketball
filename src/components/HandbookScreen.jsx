@@ -23,7 +23,7 @@ const SECTIONS = [
     id: 'reference',
     icon: '📌',
     title: 'Quick Reference',
-    description: 'The 6 evaluation domains, rating scale, coaching philosophy, and FAQ.',
+    description: 'The 6 things you rate, the rating scale, coaching philosophy, and FAQ.',
   },
 ];
 

@@ -91,7 +91,7 @@ export function HomeScreen({ onStartTryout, onOpenHandbook, onResume, onStartHer
             <div className="flex-1">
               <span className="text-[19px] font-semibold text-white">Tryout Evaluation</span>
               <p className="text-[13px] text-white/85 mt-0.5">
-                Rate players by number across 6 domains. Auto-scored and ranked.
+                Rate players by number across 6 areas. Auto-scored and ranked.
               </p>
             </div>
             <svg className="w-5 h-5 text-white/70 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">

@@ -103,7 +103,7 @@ export function ResultsScreen({ session, onEdit, onNewSession }) {
           <div className="bg-[var(--accent-light)] rounded-[10px] p-3 mb-1">
             <p className="text-[12px] text-[var(--text-secondary)]">
               Scores only compare fairly when players are rated on the same things. Anyone rated on fewer
-              than {MIN_RANKABLE} of the 6 domains is marked "rate more to rank" and sorted below, with no top-3 badge.
+              than {MIN_RANKABLE} of the 6 areas is marked "rate more to rank" and sorted below, with no top-3 badge.
             </p>
           </div>
           {displayOrder.map(({ player, domains, score, domainsRated }, index) => {
@@ -137,7 +137,7 @@ export function ResultsScreen({ session, onEdit, onNewSession }) {
                         Player {player}
                       </div>
                       <div className="text-[12px]" style={{ color: tier.color }}>
-                        {tier.label} • {domainsRated}/6 domains
+                        {tier.label} • {domainsRated}/6 areas
                         {score !== null && domainsRated < MIN_RANKABLE ? ' • rate more to rank' : ''}
                       </div>
                     </div>

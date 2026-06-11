@@ -218,7 +218,7 @@ export function EvaluateScreen({ session, onUpdateRating, onUpdateNote, onComple
           {domainsRated < 4 && (
             <div className="bg-[var(--rating-ok)]/10 border border-[var(--rating-ok)]/30 rounded-[var(--radius)] p-3">
               <p className="text-[13px] text-[var(--text-primary)]">
-                <strong>Tip:</strong> If you can't observe a domain, use "Skip" - don't guess.
+                <strong>Tip:</strong> If you can't observe an area, use "Skip" - don't guess.
               </p>
             </div>
           )}

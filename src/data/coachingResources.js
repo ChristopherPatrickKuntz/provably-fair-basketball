@@ -673,7 +673,7 @@ export const MOTIVATIONAL_QUOTES = [
   { quote: "The only way to prove you're a good sport is to lose.", author: "Ernie Banks" },
   { quote: "You miss 100% of the shots you don't take.", author: "Wayne Gretzky" },
   { quote: "I've failed over and over again in my life. That is why I succeed.", author: "Michael Jordan" },
-  { quote: "Excellence is not a singular act, but a habit. You are what you repeatedly do.", author: "Shaquille O'Neal" },
+  { quote: "We are what we repeatedly do. Excellence, then, is not an act, but a habit.", author: "Will Durant" },
   { quote: "The strength of the team is each individual member. The strength of each member is the team.", author: "Phil Jackson" },
   { quote: "Talent wins games, but teamwork and intelligence win championships.", author: "Michael Jordan" },
   { quote: "I've got a theory that if you give 100% all of the time, somehow things will work out in the end.", author: "Larry Bird" },
@@ -869,8 +869,7 @@ export const GOOD_TO_KNOW = [
   },
   {
     title: 'The Invisible Game',
-    content: 'Research shows 90% of coaching communication is non-verbal. Your facial expressions, body language, and energy level communicate more than your words. Stay calm, stay positive.',
-    source: 'Coaching Psychology Research'
+    content: 'Players read your face, body language, and energy long before they process your words. A calm, positive demeanor is often the loudest thing in the gym.'
   },
   {
     title: 'Questions > Instructions',
@@ -966,7 +965,7 @@ export const COACHING_TRAPS = [
       'Focus on individual defense: stance, slides, closeouts',
       'The goal is developing players, not winning youth championships'
     ],
-    quote: '"Zone defense is where bad habits go to hide." - Bob Knight'
+    quote: '"Zone defense is where bad habits go to hide." - old coaching saying'
   },
   {
     id: 'practice-scrimmage',
@@ -1280,5 +1279,10 @@ export const FAQ = [
     id: 'mobile-friendly',
     question: 'Does this work on my phone?',
     answer: 'Yes. The app is designed mobile-first. Use it on your phone during tryouts, on a tablet at practice, or on desktop for planning. Works in any modern browser.'
+  },
+  {
+    id: 'works-offline',
+    question: 'Does it work offline, like in a gym with no Wi-Fi?',
+    answer: 'Yes. After your first visit the app loads and runs without internet, so you can rate players courtside with no signal. Your ratings save on your device either way. You can also install it from your browser (Add to Home Screen) so it opens like a regular app.'
   }
 ];

@@ -50,7 +50,7 @@ FIN = Finishing
 TEM = Teammate
 
 RATINGS: 1=Needs Work, 2=OK, 3=Good, -=Skip
-* = rated on fewer than 4 of 6 domains; sorted below and not directly comparable.
+* = rated on fewer than 4 of 6 areas; sorted below and not directly comparable.
 (Formal reports may use: Emerging/Developing/Proficient)
 
 ────────────────────────────────────────────
@@ -126,7 +126,7 @@ export function generatePrintableHTML(session, ratings) {
         <div class="rank">${rankNum ?? '-'}</div>
         <div class="player-info">
           <strong>Player #${player}</strong>
-          <span class="meta">${domainsRated}/6 domains rated${statusLabel}</span>
+          <span class="meta">${domainsRated}/6 areas rated${statusLabel}</span>
         </div>
         <div class="score" style="color: ${score === null ? '#999' : score >= 70 ? '#1A7F37' : score >= 50 ? '#8A6D00' : '#D70015'}">
           ${score !== null ? score + '%' : 'N/A'}

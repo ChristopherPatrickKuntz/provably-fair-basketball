@@ -707,7 +707,9 @@ function TipsTab() {
               <div key={i} className="bg-[var(--bg-card)] rounded-[var(--radius)] shadow-[var(--shadow-card)] p-4">
                 <h3 className="text-[15px] font-semibold text-[var(--text-primary)] mb-2">{tip.title}</h3>
                 <p className="text-[13px] text-[var(--text-secondary)] leading-relaxed mb-2">{tip.content}</p>
-                <p className="text-[11px] text-[var(--accent)] italic">Source: {tip.source}</p>
+                {tip.source && (
+                  <p className="text-[11px] text-[var(--accent)] italic">Source: {tip.source}</p>
+                )}
               </div>
             ))}
           </div>
