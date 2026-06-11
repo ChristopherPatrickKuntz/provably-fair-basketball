@@ -2,7 +2,7 @@ export const DOMAINS = [
   { 
     id: 'effort', 
     name: 'Effort', 
-    weight: 2.0, 
+    weight: 3.0, 
     helper: 'Hustle • Tries hard things • Recovers quickly',
     philosophy: 'Effort is the only non-negotiable',
     lookFor: [
@@ -132,13 +132,6 @@ export const DOMAINS = [
     middleSchool: 'Positive, inclusive',
     highSchool: 'Leads appropriately, accepts role'
   }
-];
-
-export const RATINGS = [
-  { value: null, label: '-', sublabel: 'Skip', color: 'skip' },
-  { value: 1, label: '1', sublabel: 'Needs Work', color: 'needs-work' },
-  { value: 2, label: '2', sublabel: 'OK', color: 'ok' },
-  { value: 3, label: '3', sublabel: 'Good', color: 'good' }
 ];
 
 export const PLAYER_COUNTS = [8, 10, 12, 15, 20];

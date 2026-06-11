@@ -129,6 +129,7 @@ export function SetupScreen({ sessions, onStartSession, onContinueSession, onDel
                     <button
                       key={band.id}
                       onClick={() => setGradeBand(band.id)}
+                      aria-pressed={gradeBand === band.id}
                       className={`py-4 px-3 rounded-[12px] text-center transition-all ${
                         gradeBand === band.id
                           ? 'bg-[var(--accent)] text-white'
@@ -154,6 +155,8 @@ export function SetupScreen({ sessions, onStartSession, onContinueSession, onDel
                     <button
                       key={count}
                       onClick={() => setPlayerCount(count)}
+                      aria-pressed={playerCount === count}
+                      aria-label={`${count} players`}
                       className={`min-w-[52px] py-3 px-4 rounded-[10px] text-[15px] font-semibold transition-all ${
                         playerCount === count
                           ? 'bg-[var(--accent)] text-white'
@@ -231,7 +234,7 @@ function SessionRow({ session, onTap, onDelete }) {
         className="w-full px-4 py-3.5 flex items-center justify-between text-left hover:bg-[var(--bg-secondary)]/50 active:bg-[var(--bg-secondary)] transition-colors cursor-pointer"
         role="button"
         tabIndex={0}
-        onKeyDown={(e) => e.key === 'Enter' && onTap()}
+        onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); onTap(); } }}
       >
         <div className="flex-1">
           <p className="text-[15px] text-[var(--text-primary)] font-medium">

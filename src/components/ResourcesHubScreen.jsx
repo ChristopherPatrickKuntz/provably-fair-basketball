@@ -243,6 +243,7 @@ function FAQItem({ question, answer }) {
     <div className="border-b border-[var(--bg-secondary)] pb-3 last:border-0 last:pb-0">
       <button
         onClick={() => setIsOpen(!isOpen)}
+        aria-expanded={isOpen}
         className="w-full text-left flex items-start justify-between gap-2"
       >
         <span className="text-[14px] font-medium text-[var(--text-primary)]">{question}</span>
@@ -265,6 +266,7 @@ function ResourceCard({ title, icon, isExpanded, onToggle, children }) {
     <div className="bg-[var(--bg-card)] rounded-[var(--radius)] shadow-[var(--shadow-card)] overflow-hidden">
       <button
         onClick={onToggle}
+        aria-expanded={isExpanded}
         className="w-full p-4 text-left flex items-center justify-between"
       >
         <div className="flex items-center gap-3">

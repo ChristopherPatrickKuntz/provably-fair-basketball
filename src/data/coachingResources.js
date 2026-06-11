@@ -1229,7 +1229,7 @@ export const FAQ = [
   {
     id: 'what-is-this',
     question: 'What is Provably Fair Basketball?',
-    answer: 'A free toolkit for youth basketball coaches and schools. It provides a structured tryout evaluation system, a 12-week season plan, practice drills, and parent communication templates. Our goal is to reduce overwhelm for new coaches and bring transparency to tryouts.'
+    answer: 'A free toolkit for youth basketball coaches and schools. It provides a structured tryout evaluation system, a customizable season plan, practice drills, and parent communication templates. Our goal is to reduce overwhelm for new coaches and bring transparency to tryouts.'
   },
   {
     id: 'who-is-this-for',
@@ -1254,7 +1254,7 @@ export const FAQ = [
   {
     id: 'season-plan',
     question: 'What\'s in the Season Plan?',
-    answer: 'A 12-week structured curriculum covering skill phases (fundamentals → team concepts → game readiness). Each week has themes, practice plans, and age-appropriate drills. You can adjust the start date to fit your schedule.'
+    answer: 'A structured week-by-week curriculum covering skill phases (fundamentals → team concepts → game readiness). Each week has themes, practice plans, and age-appropriate drills. Set your own start date, number of weeks, and a movable mid-season break, so it fits any calendar.'
   },
   {
     id: 'practice-toolkit',

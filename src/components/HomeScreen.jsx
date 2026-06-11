@@ -1,8 +1,24 @@
-import { useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { LEGAL_DISCLAIMER } from '../data/coachingResources';
 
 export function HomeScreen({ onStartTryout, onOpenHandbook, onResume, onStartHere, resumeSession }) {
   const [showAbout, setShowAbout] = useState(false);
+  const aboutBtnRef = useRef(null);
+  const aboutCloseRef = useRef(null);
+
+  const closeAbout = () => {
+    setShowAbout(false);
+    aboutBtnRef.current?.focus();
+  };
+
+  // Move focus into the dialog on open, restore it on close, and close on Escape.
+  useEffect(() => {
+    if (!showAbout) return;
+    aboutCloseRef.current?.focus();
+    const onKey = (e) => { if (e.key === 'Escape') closeAbout(); };
+    window.addEventListener('keydown', onKey);
+    return () => window.removeEventListener('keydown', onKey);
+  }, [showAbout]);
 
   return (
     <div className="min-h-screen bg-[var(--bg-page)] flex flex-col">
@@ -106,7 +122,10 @@ export function HomeScreen({ onStartTryout, onOpenHandbook, onResume, onStartHer
       {/* Footer */}
       <div className="px-6 py-6 mt-6 text-center border-t border-[var(--bg-secondary)]">
         <button
+          ref={aboutBtnRef}
           onClick={() => setShowAbout(true)}
+          aria-haspopup="dialog"
+          aria-expanded={showAbout}
           className="text-[13px] text-[var(--accent)] font-medium mb-2"
         >
           About this tool &amp; fairness
@@ -128,12 +147,17 @@ export function HomeScreen({ onStartTryout, onOpenHandbook, onResume, onStartHer
       {showAbout && (
         <div
           className="fixed inset-0 bg-black/40 z-50 flex items-center justify-center p-4"
-          onClick={(e) => e.target === e.currentTarget && setShowAbout(false)}
+          onClick={(e) => e.target === e.currentTarget && closeAbout()}
         >
-          <div className="bg-[var(--bg-card)] rounded-[20px] w-full max-w-lg max-h-[90vh] flex flex-col shadow-xl">
+          <div
+            role="dialog"
+            aria-modal="true"
+            aria-labelledby="about-title"
+            className="bg-[var(--bg-card)] rounded-[20px] w-full max-w-lg max-h-[90vh] flex flex-col shadow-xl"
+          >
             <div className="p-4 border-b border-[var(--bg-secondary)] flex items-center justify-between flex-shrink-0">
-              <h3 className="text-[17px] font-semibold text-[var(--text-primary)]">{LEGAL_DISCLAIMER.title}</h3>
-              <button onClick={() => setShowAbout(false)} className="text-[var(--accent)] text-[15px] font-medium">
+              <h3 id="about-title" className="text-[17px] font-semibold text-[var(--text-primary)]">{LEGAL_DISCLAIMER.title}</h3>
+              <button ref={aboutCloseRef} onClick={closeAbout} className="text-[var(--accent)] text-[15px] font-medium">
                 Done
               </button>
             </div>

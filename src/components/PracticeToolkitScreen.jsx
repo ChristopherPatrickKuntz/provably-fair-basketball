@@ -65,6 +65,7 @@ function TabButton({ children, active, onClick }) {
   return (
     <button
       onClick={onClick}
+      aria-pressed={active}
       className={`flex-1 py-2.5 rounded-[10px] text-[15px] font-medium transition-all ${
         active 
           ? 'bg-[var(--accent)] text-white' 
@@ -187,6 +188,7 @@ ${drillDetails}
             <div key={session.id} className="bg-[var(--bg-card)] rounded-[var(--radius)] shadow-[var(--shadow-card)] overflow-hidden">
               <button
                 onClick={() => setSelectedSession(selectedSession === session.id ? null : session.id)}
+                aria-expanded={selectedSession === session.id}
                 className="w-full p-4 text-left flex items-center justify-between"
               >
                 <div className="flex-1">
@@ -259,8 +261,9 @@ function DrillLibraryView({ selectedCategory, setSelectedCategory, selectedDrill
         <div className="flex flex-wrap gap-2 mb-4">
           <button
             onClick={() => setSelectedCategory(null)}
+            aria-pressed={!selectedCategory}
             className={`px-3 py-1.5 rounded-[8px] text-[13px] font-medium ${
-              !selectedCategory 
+              !selectedCategory
                 ? 'bg-[var(--accent)] text-white' 
                 : 'bg-[var(--bg-secondary)] text-[var(--text-secondary)]'
             }`}
@@ -271,8 +274,9 @@ function DrillLibraryView({ selectedCategory, setSelectedCategory, selectedDrill
             <button
               key={cat.id}
               onClick={() => setSelectedCategory(cat.id)}
+              aria-pressed={selectedCategory === cat.id}
               className={`px-3 py-1.5 rounded-[8px] text-[13px] font-medium ${
-                selectedCategory === cat.id 
+                selectedCategory === cat.id
                   ? 'bg-[var(--accent)] text-white' 
                   : 'bg-[var(--bg-secondary)] text-[var(--text-secondary)]'
               }`}
@@ -311,6 +315,7 @@ function DrillCard({ drill, isExpanded, onToggle }) {
     <div className="bg-[var(--bg-card)] rounded-[var(--radius)] shadow-[var(--shadow-card)] overflow-hidden">
       <button
         onClick={onToggle}
+        aria-expanded={isExpanded}
         className="w-full p-4 text-left flex items-center justify-between"
       >
         <div className="flex-1">
@@ -318,9 +323,9 @@ function DrillCard({ drill, isExpanded, onToggle }) {
             <span className="text-[13px]">{category?.icon}</span>
             <p className="text-[15px] font-medium text-[var(--text-primary)]">{drill.name}</p>
             {difficulty && (
-              <span 
-                className="text-[9px] font-bold uppercase px-1.5 py-0.5 rounded text-white"
-                style={{ backgroundColor: difficulty.color }}
+              <span
+                className="text-[9px] font-bold uppercase px-1.5 py-0.5 rounded"
+                style={{ backgroundColor: difficulty.color, color: difficulty.textColor }}
               >
                 {difficulty.label}
               </span>

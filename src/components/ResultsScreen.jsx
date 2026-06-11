@@ -32,12 +32,13 @@ export function ResultsScreen({ session, onEdit, onNewSession }) {
     setTimeout(() => setCopyStatus('idle'), 2000);
   };
 
+  // Solid pill per rating so the middle tier reads as clear yellow (matching the
+  // Evaluate chip + difficulty badges). Yellow needs dark text; red/green use white.
   const getRatingLabel = (value) => {
-    if (value === null || value === undefined) return { text: '-', color: 'var(--text-muted)', bg: 'var(--bg-secondary)' };
-    if (value === 1) return { text: 'Needs Work', color: 'var(--rating-needs-work)', bg: 'rgba(255,59,48,0.1)' };
-    if (value === 2) return { text: 'OK', color: 'var(--rating-ok)', bg: 'rgba(255,149,0,0.1)' };
-    if (value === 3) return { text: 'Good', color: 'var(--rating-good)', bg: 'rgba(52,199,89,0.1)' };
-    return { text: '-', color: 'var(--text-muted)', bg: 'var(--bg-secondary)' };
+    if (value === 1) return { text: 'Needs Work', pillBg: 'var(--rating-needs-work)', pillFg: '#FFFFFF' };
+    if (value === 2) return { text: 'OK', pillBg: '#EAB308', pillFg: '#422006' };
+    if (value === 3) return { text: 'Good', pillBg: 'var(--rating-good)', pillFg: '#FFFFFF' };
+    return { text: null, pillBg: null, pillFg: null };
   };
 
   const getScoreTier = (score) => {
@@ -117,6 +118,8 @@ export function ResultsScreen({ session, onEdit, onNewSession }) {
               >
                 <button
                   onClick={() => setExpandedPlayer(isExpanded ? null : player)}
+                  aria-expanded={isExpanded}
+                  aria-label={`Player ${player}, ${tier.label}, ${score !== null ? score + ' percent' : 'not rated'}`}
                   className="w-full p-4 flex items-center justify-between"
                 >
                   <div className="flex items-center gap-3">
@@ -171,20 +174,23 @@ export function ResultsScreen({ session, onEdit, onNewSession }) {
                         {DOMAINS.map(domain => {
                           const rating = getRatingLabel(domains[domain.id]);
                           return (
-                            <div 
-                              key={domain.id} 
-                              className="rounded-[8px] p-2.5"
-                              style={{ backgroundColor: rating.bg }}
+                            <div
+                              key={domain.id}
+                              className="rounded-[8px] p-2.5 bg-[var(--bg-secondary)]"
                             >
-                              <div className="text-[11px] text-[var(--text-muted)] uppercase tracking-wide">
+                              <div className="text-[11px] text-[var(--text-muted)] uppercase tracking-wide mb-1">
                                 {domain.name}
                               </div>
-                              <div 
-                                className="text-[13px] font-semibold"
-                                style={{ color: rating.color }}
-                              >
-                                {rating.text}
-                              </div>
+                              {rating.text ? (
+                                <span
+                                  className="inline-block text-[11px] font-bold px-2 py-0.5 rounded"
+                                  style={{ backgroundColor: rating.pillBg, color: rating.pillFg }}
+                                >
+                                  {rating.text}
+                                </span>
+                              ) : (
+                                <span className="text-[13px] text-[var(--text-muted)]">Not rated</span>
+                              )}
                             </div>
                           );
                         })}

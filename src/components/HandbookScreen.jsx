@@ -5,7 +5,7 @@ const SECTIONS = [
     id: 'season',
     icon: '📅',
     title: 'Season Plan',
-    description: '12-week curriculum with weekly focus, practice plans, and league rules.',
+    description: 'Weekly focus, practice plans, and league rules, on a schedule you set.',
   },
   {
     id: 'practice',

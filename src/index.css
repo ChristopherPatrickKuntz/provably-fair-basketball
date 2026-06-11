@@ -1,6 +1,10 @@
 @import "tailwindcss";
 
 :root {
+  /* Render native controls (date picker, select, scrollbars) in light mode even
+     when the OS is in dark mode, so the light UI stays consistent. */
+  color-scheme: light;
+
   /* Lane A: Apple-esque Sports Utility */
   
   /* Accent - single blue for pro app feel */
@@ -20,9 +24,11 @@
   
   /* Ratings - subtle, not neon */
   --rating-skip: #E5E5EA;
-  --rating-needs-work: #FF3B30;
-  --rating-ok: #FF9500;
-  --rating-good: #34C759;
+  /* Darkened from the bright Apple set to meet WCAG AA (>= 4.5:1) both as colored
+     text on white/card and as white text on the solid badges (e.g. difficulty pills). */
+  --rating-needs-work: #D70015;
+  --rating-ok: #8A6D00;
+  --rating-good: #1A7F37;
   
   /* Shadows */
   --shadow-card: 0 1px 3px rgba(0,0,0,0.08), 0 1px 2px rgba(0,0,0,0.04);
@@ -106,6 +112,16 @@ button:active:not(:disabled) {
   outline: 2px solid var(--accent);
   outline-offset: 2px;
   border-radius: 4px;
+}
+
+/* Respect the OS reduced-motion preference (WCAG 2.3.3) */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
 }
 
 /* Scrollbar styling */

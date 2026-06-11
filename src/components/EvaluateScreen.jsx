@@ -73,6 +73,8 @@ export function EvaluateScreen({ session, onUpdateRating, onUpdateNote, onComple
                 <button
                   key={num}
                   onClick={() => setSelectedPlayer(num)}
+                  aria-label={`Player ${num}${playerHasData ? ', rated' : ''}`}
+                  aria-pressed={isSelected}
                   className={`relative w-11 h-11 rounded-[10px] text-[15px] font-semibold transition-all ${
                     isSelected
                       ? 'bg-[var(--accent)] text-white shadow-md scale-110'
@@ -126,6 +128,7 @@ export function EvaluateScreen({ session, onUpdateRating, onUpdateNote, onComple
                   {/* Domain Header */}
                   <button
                     onClick={() => setExpandedDomain(isExpanded ? null : domain.id)}
+                    aria-expanded={isExpanded}
                     className="w-full flex items-start justify-between mb-3"
                   >
                     <div className="text-left">
@@ -135,9 +138,9 @@ export function EvaluateScreen({ session, onUpdateRating, onUpdateNote, onComple
                         </span>
                         {currentRating && (
                           <span className={`text-[11px] font-medium px-1.5 py-0.5 rounded ${
-                            currentRating === 3 ? 'bg-[var(--rating-good)]/20 text-[var(--rating-good)]' :
-                            currentRating === 2 ? 'bg-[var(--rating-ok)]/20 text-[var(--rating-ok)]' :
-                            'bg-[var(--rating-needs-work)]/20 text-[var(--rating-needs-work)]'
+                            currentRating === 3 ? 'bg-[var(--rating-good)] text-white' :
+                            currentRating === 2 ? 'bg-[#EAB308] text-[#422006]' :
+                            'bg-[var(--rating-needs-work)] text-white'
                           }`}>
                             {currentRating === 3 ? 'Good' : currentRating === 2 ? 'OK' : 'Needs Work'}
                           </span>
@@ -214,7 +217,7 @@ export function EvaluateScreen({ session, onUpdateRating, onUpdateNote, onComple
           {/* Skip Warning */}
           {domainsRated < 4 && (
             <div className="bg-[var(--rating-ok)]/10 border border-[var(--rating-ok)]/30 rounded-[var(--radius)] p-3">
-              <p className="text-[13px] text-[var(--rating-ok)]">
+              <p className="text-[13px] text-[var(--text-primary)]">
                 <strong>Tip:</strong> If you can't observe a domain, use "Skip" - don't guess.
               </p>
             </div>

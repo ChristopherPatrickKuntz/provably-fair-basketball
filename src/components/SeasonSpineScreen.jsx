@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { Header } from './Header';
 import { SEASON_PHASES, LEAGUE_RULES } from '../data/seasonPlan';
 import { DRILLS } from '../data/drills';
@@ -199,6 +199,7 @@ function SeasonSetupCard({ season, onUpdate, endDate }) {
               <select
                 value={Math.min(season.breakAfter, maxBreakAfter)}
                 onChange={(e) => onUpdate({ seasonBreakAfter: parseInt(e.target.value, 10) })}
+                aria-label="Break after which week"
                 className="bg-[var(--bg-secondary)] rounded-[8px] px-3 py-1.5 text-[14px] text-[var(--text-primary)] border-none outline-none"
               >
                 {Array.from({ length: maxBreakAfter }, (_, i) => i + 1).map((n) => (
@@ -337,6 +338,7 @@ function PracticePlanView({ week, displayDates, onBack }) {
               <button
                 key={i}
                 onClick={() => setSelectedDay(i)}
+                aria-pressed={selectedDay === i}
                 className={`flex-1 py-2.5 rounded-[10px] text-[15px] font-medium transition-all ${
                   selectedDay === i
                     ? 'bg-[var(--accent)] text-white'
@@ -410,6 +412,7 @@ function PracticeBlock({ block }) {
     <div className="bg-[var(--bg-card)] rounded-[var(--radius)] shadow-[var(--shadow-card)] overflow-hidden">
       <button
         onClick={() => drill && setShowDrill(!showDrill)}
+        aria-expanded={drill ? showDrill : undefined}
         className="w-full flex text-left"
       >
         {/* Time Column */}
@@ -495,15 +498,33 @@ function PracticeBlock({ block }) {
 }
 
 function LeagueRulesModal({ onClose }) {
+  const closeRef = useRef(null);
+  // Move focus into the dialog on open, restore it on close, and close on Escape.
+  useEffect(() => {
+    const prevFocus = document.activeElement;
+    closeRef.current?.focus();
+    const onKey = (e) => { if (e.key === 'Escape') onClose(); };
+    window.addEventListener('keydown', onKey);
+    return () => {
+      window.removeEventListener('keydown', onKey);
+      if (prevFocus && prevFocus.focus) prevFocus.focus();
+    };
+  }, [onClose]);
+
   return (
     <div
       className="fixed inset-0 bg-black/40 z-50 flex items-center justify-center p-4"
       onClick={(e) => e.target === e.currentTarget && onClose()}
     >
-      <div className="bg-[var(--bg-card)] rounded-[20px] w-full max-w-lg max-h-[85vh] flex flex-col shadow-xl">
+      <div
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="league-rules-title"
+        className="bg-[var(--bg-card)] rounded-[20px] w-full max-w-lg max-h-[85vh] flex flex-col shadow-xl"
+      >
         <div className="p-4 border-b border-[var(--bg-secondary)] flex items-center justify-between flex-shrink-0">
-          <h3 className="text-[17px] font-semibold text-[var(--text-primary)]">League Rules</h3>
-          <button onClick={onClose} className="text-[var(--accent)] text-[15px] font-medium">
+          <h3 id="league-rules-title" className="text-[17px] font-semibold text-[var(--text-primary)]">League Rules</h3>
+          <button ref={closeRef} onClick={onClose} className="text-[var(--accent)] text-[15px] font-medium">
             Done
           </button>
         </div>

@@ -1,6 +1,7 @@
-// Computes a season's week dates from a coach-chosen start date, so the same
-// 12-week curriculum works for any season (Dec-Mar, Apr-Sep, Sep-Mar, whatever).
-// Replaces the old hardcoded "Dec 7-14" strings that only worked Dec-March.
+// Computes a season's week dates from a coach-chosen start date, so the
+// curriculum works for any window (Dec-Mar, Apr-Sep, Sep-Mar, whatever) and any
+// length the coach sets. Replaces the old hardcoded "Dec 7-14" strings that only
+// worked Dec-March.
 
 const MONTHS = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
 const FULL_MONTHS = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];

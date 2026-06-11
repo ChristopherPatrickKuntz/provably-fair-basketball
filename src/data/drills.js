@@ -10,9 +10,9 @@ export const DRILL_CATEGORIES = [
 ];
 
 export const DIFFICULTY_LEVELS = [
-  { id: 'beginner', label: 'Beginner', color: '#34C759' },
-  { id: 'intermediate', label: 'Intermediate', color: '#FF9500' },
-  { id: 'advanced', label: 'Advanced', color: '#FF3B30' }
+  { id: 'beginner', label: 'Beginner', color: '#1A7F37', textColor: '#FFFFFF' },
+  { id: 'intermediate', label: 'Intermediate', color: '#EAB308', textColor: '#422006' },
+  { id: 'advanced', label: 'Advanced', color: '#D70015', textColor: '#FFFFFF' }
 ];
 
 export const QUICK_SESSIONS = [
@@ -99,6 +99,7 @@ export const DRILLS = [
   },
   {
     id: 'pivot-tag',
+    difficulty: 'beginner',
     category: 'pivoting',
     name: 'Pivot Tag',
     time: '8 min',
@@ -120,6 +121,7 @@ export const DRILLS = [
   // PASSING
   {
     id: 'partner-passing',
+    difficulty: 'beginner',
     category: 'passing',
     name: 'Partner Passing',
     time: '5 min',
@@ -140,6 +142,7 @@ export const DRILLS = [
   },
   {
     id: 'pass-cut-lines',
+    difficulty: 'intermediate',
     category: 'passing',
     name: 'Pass & Cut Lines',
     time: '10 min',
@@ -161,6 +164,7 @@ export const DRILLS = [
   },
   {
     id: '3-man-weave',
+    difficulty: 'intermediate',
     category: 'passing',
     name: '3-Man Weave',
     time: '8 min',
@@ -183,6 +187,7 @@ export const DRILLS = [
   // DRIBBLING
   {
     id: 'stationary-dribble',
+    difficulty: 'beginner',
     category: 'dribbling',
     name: 'Stationary Dribble Series',
     time: '5 min',
@@ -204,6 +209,7 @@ export const DRILLS = [
   },
   {
     id: 'dribble-knockout',
+    difficulty: 'beginner',
     category: 'dribbling',
     name: 'Dribble Knockout',
     time: '8 min',
@@ -225,6 +231,7 @@ export const DRILLS = [
   // SHOOTING
   {
     id: 'form-shooting',
+    difficulty: 'beginner',
     category: 'shooting',
     name: 'Form Shooting',
     time: '5 min',
@@ -245,6 +252,7 @@ export const DRILLS = [
   },
   {
     id: 'spot-shooting',
+    difficulty: 'beginner',
     category: 'shooting',
     name: '5-Spot Shooting',
     time: '10 min',
@@ -266,6 +274,7 @@ export const DRILLS = [
   // DEFENSE
   {
     id: 'defensive-stance',
+    difficulty: 'beginner',
     category: 'defense',
     name: 'Defensive Stance Hold',
     time: '5 min',
@@ -286,6 +295,7 @@ export const DRILLS = [
   },
   {
     id: 'defensive-slides',
+    difficulty: 'beginner',
     category: 'defense',
     name: 'Defensive Slides',
     time: '5 min',
@@ -306,6 +316,7 @@ export const DRILLS = [
   },
   {
     id: 'shell-drill',
+    difficulty: 'advanced',
     category: 'defense',
     name: 'Shell Drill (4v4)',
     time: '10 min',
@@ -327,6 +338,7 @@ export const DRILLS = [
   // SMALL-SIDED GAMES
   {
     id: '2v2-no-dribble',
+    difficulty: 'intermediate',
     category: 'smallSided',
     name: '2v2 No Dribble',
     time: '10 min',
@@ -346,6 +358,7 @@ export const DRILLS = [
   },
   {
     id: '3v3-one-dribble',
+    difficulty: 'intermediate',
     category: 'smallSided',
     name: '3v3 One-Dribble',
     time: '10 min',
@@ -365,6 +378,7 @@ export const DRILLS = [
   },
   {
     id: '3v3-transition',
+    difficulty: 'advanced',
     category: 'smallSided',
     name: '3v3 Transition',
     time: '12 min',
@@ -386,6 +400,7 @@ export const DRILLS = [
   // TEAM DRILLS
   {
     id: '5v0-transition',
+    difficulty: 'intermediate',
     category: 'team',
     name: '5v0 Transition',
     time: '8 min',
@@ -407,6 +422,7 @@ export const DRILLS = [
   },
   {
     id: 'press-break',
+    difficulty: 'advanced',
     category: 'team',
     name: 'Press Break',
     time: '12 min',
@@ -427,6 +443,7 @@ export const DRILLS = [
   // LAYUP DRILLS
   {
     id: 'basic-layup-lines',
+    difficulty: 'beginner',
     category: 'shooting',
     name: 'Basic Layup Lines',
     time: '10 min',
@@ -448,6 +465,7 @@ export const DRILLS = [
   },
   {
     id: 'mikan-drill',
+    difficulty: 'beginner',
     category: 'shooting',
     name: 'Mikan Drill',
     time: '5 min',
@@ -471,6 +489,7 @@ export const DRILLS = [
   // MORE DEFENSIVE DRILLS
   {
     id: 'zigzag-slides',
+    difficulty: 'intermediate',
     category: 'defense',
     name: 'Zig-Zag Slides',
     time: '8 min',
@@ -491,6 +510,7 @@ export const DRILLS = [
   },
   {
     id: '1v1-closeout',
+    difficulty: 'intermediate',
     category: 'defense',
     name: '1v1 Closeout',
     time: '10 min',
@@ -512,6 +532,7 @@ export const DRILLS = [
   // MORE DRIBBLING
   {
     id: 'cone-weave',
+    difficulty: 'beginner',
     category: 'dribbling',
     name: 'Cone Weave',
     time: '8 min',

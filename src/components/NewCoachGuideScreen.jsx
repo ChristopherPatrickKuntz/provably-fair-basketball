@@ -109,7 +109,7 @@ function GuideTab({ expandedSection, setExpandedSection }) {
       <div className="max-w-lg mx-auto">
         {/* Welcome */}
         <div className="bg-[var(--accent)] rounded-[var(--radius)] p-5 mb-6 text-center">
-          <h1 className="text-[22px] font-bold text-white mb-1">{NEW_COACH_GUIDE.title}</h1>
+          <h2 className="text-[22px] font-bold text-white mb-1">{NEW_COACH_GUIDE.title}</h2>
           <p className="text-[14px] text-white/80">{NEW_COACH_GUIDE.subtitle}</p>
         </div>
 
@@ -149,6 +149,7 @@ function GuideSection({ section, isExpanded, onToggle }) {
     <div className="bg-[var(--bg-card)] rounded-[var(--radius)] shadow-[var(--shadow-card)] overflow-hidden">
       <button
         onClick={onToggle}
+        aria-expanded={isExpanded}
         className="w-full p-4 text-left flex items-center justify-between"
       >
         <div className="flex items-center gap-3">
@@ -225,6 +226,7 @@ function LTADTab() {
             <button
               key={stage.id}
               onClick={() => setSelectedStage(stage.id)}
+              aria-pressed={selectedStage === stage.id}
               className={`px-3 py-2 rounded-[10px] text-[12px] font-medium whitespace-nowrap transition-all ${
                 selectedStage === stage.id 
                   ? 'bg-[var(--accent)] text-white' 
@@ -327,6 +329,7 @@ function TemplatesTab() {
             <div key={key} className="bg-[var(--bg-card)] rounded-[var(--radius)] shadow-[var(--shadow-card)] overflow-hidden">
               <button
                 onClick={() => setSelectedTemplate(selectedTemplate === key ? null : key)}
+                aria-expanded={selectedTemplate === key}
                 className="w-full p-4 text-left flex items-center justify-between"
               >
                 <div>
@@ -413,6 +416,7 @@ function ChecklistsTab() {
             <button
               key={key}
               onClick={() => setSelectedChecklist(key)}
+              aria-pressed={selectedChecklist === key}
               className={`px-3 py-2 rounded-[10px] text-[12px] font-medium whitespace-nowrap transition-all ${
                 selectedChecklist === key 
                   ? 'bg-[var(--accent)] text-white' 
@@ -560,6 +564,7 @@ function TrapsTab() {
             <div key={trap.id} className="bg-[var(--bg-card)] rounded-[var(--radius)] shadow-[var(--shadow-card)] overflow-hidden">
               <button
                 onClick={() => setExpandedTrap(expandedTrap === trap.id ? null : trap.id)}
+                aria-expanded={expandedTrap === trap.id}
                 className="w-full p-4 text-left flex items-center gap-3"
               >
                 <span className="text-xl">{trap.icon}</span>
@@ -661,44 +666,46 @@ function TipsTab() {
   return (
     <div className="px-4 py-5">
       <div className="max-w-lg mx-auto">
+        {/* Lead with the practical basics this section promises */}
         <div className="bg-[var(--accent-light)] rounded-[var(--radius)] p-4 mb-6">
-          <h2 className="text-[15px] font-semibold text-[var(--accent)] mb-1">Good to Know</h2>
+          <h2 className="text-[15px] font-semibold text-[var(--accent)] mb-1">The basics, in plain language</h2>
           <p className="text-[13px] text-[var(--text-secondary)]">
-            Research-backed insights that will make you a better coach.
+            Ball size, hoop height, the common rules and fouls, and the words you'll hear. Always check your own league for the exact numbers.
           </p>
         </div>
 
+        {/* Rules Quick Reference - full, no truncation */}
         <div className="space-y-3">
-          {GOOD_TO_KNOW.map((tip, i) => (
-            <div key={i} className="bg-[var(--bg-card)] rounded-[var(--radius)] shadow-[var(--shadow-card)] p-4">
-              <h3 className="text-[15px] font-semibold text-[var(--text-primary)] mb-2">{tip.title}</h3>
-              <p className="text-[13px] text-[var(--text-secondary)] leading-relaxed mb-2">{tip.content}</p>
-              <p className="text-[11px] text-[var(--accent)] italic">Source: {tip.source}</p>
+          {BASKETBALL_RULES_BASICS.sections.map((section, i) => (
+            <div key={i} className="bg-[var(--bg-card)] rounded-[var(--radius)] shadow-[var(--shadow-card)] overflow-hidden">
+              <div className="bg-[var(--bg-secondary)] px-4 py-2">
+                <h4 className="text-[13px] font-semibold text-[var(--text-primary)]">{section.name}</h4>
+              </div>
+              <div className="p-3">
+                <ul className="space-y-1">
+                  {section.rules.map((rule, j) => (
+                    <li key={j} className="text-[12px] text-[var(--text-secondary)] flex items-start gap-2">
+                      <span className="text-[var(--accent)]">•</span>
+                      <span>{rule}</span>
+                    </li>
+                  ))}
+                </ul>
+              </div>
             </div>
           ))}
         </div>
 
-        {/* Rules Quick Reference */}
-        <div className="mt-6">
+        {/* Good to Know - research insights, secondary */}
+        <div className="mt-8">
           <h3 className="text-[13px] font-medium text-[var(--text-secondary)] uppercase tracking-wide mb-3 px-1">
-            Rules Quick Reference
+            Good to know
           </h3>
           <div className="space-y-3">
-            {BASKETBALL_RULES_BASICS.sections.slice(0, 3).map((section, i) => (
-              <div key={i} className="bg-[var(--bg-card)] rounded-[var(--radius)] shadow-[var(--shadow-card)] overflow-hidden">
-                <div className="bg-[var(--bg-secondary)] px-4 py-2">
-                  <h4 className="text-[13px] font-semibold text-[var(--text-primary)]">{section.name}</h4>
-                </div>
-                <div className="p-3">
-                  <ul className="space-y-1">
-                    {section.rules.slice(0, 4).map((rule, j) => (
-                      <li key={j} className="text-[12px] text-[var(--text-secondary)] flex items-start gap-2">
-                        <span className="text-[var(--accent)]">•</span>
-                        <span>{rule}</span>
-                      </li>
-                    ))}
-                  </ul>
-                </div>
+            {GOOD_TO_KNOW.map((tip, i) => (
+              <div key={i} className="bg-[var(--bg-card)] rounded-[var(--radius)] shadow-[var(--shadow-card)] p-4">
+                <h3 className="text-[15px] font-semibold text-[var(--text-primary)] mb-2">{tip.title}</h3>
+                <p className="text-[13px] text-[var(--text-secondary)] leading-relaxed mb-2">{tip.content}</p>
+                <p className="text-[11px] text-[var(--accent)] italic">Source: {tip.source}</p>
               </div>
             ))}
           </div>

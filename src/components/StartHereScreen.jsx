@@ -31,7 +31,7 @@ const STEPS = [
     icon: '📅',
     minutes: 'all season',
     title: 'Follow the season plan',
-    description: '12 weeks laid out for you, with what to work on each week and a plan for every practice.',
+    description: 'A full season laid out for you, with what to work on each week and a plan for every practice.',
   },
   {
     target: 'parents',

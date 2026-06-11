@@ -24,9 +24,9 @@ export function Header({
 
         {/* Center */}
         <div className="flex-1 text-center px-2">
-          <div className="text-[17px] font-semibold text-[var(--text-primary)]">
+          <h1 className="text-[17px] font-semibold text-[var(--text-primary)]">
             {title}
-          </div>
+          </h1>
           {subtitle && (
             <div className="text-[13px] text-[var(--text-muted)]">
               {subtitle}

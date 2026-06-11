@@ -7,8 +7,15 @@ export function generateExportText(session, ratings) {
     day: 'numeric'
   });
   
+  // Match the on-screen fairness order: players rated on 4+ domains rank first,
+  // then partial-coverage players, then unrated. A thinly-rated player must not
+  // appear ranked above a fully-evaluated one in the kept/printed report.
   const sorted = sortByScore(ratings);
-  
+  const ranked = sorted.filter((p) => p.score !== null && p.domainsRated >= 4);
+  const partial = sorted.filter((p) => p.score !== null && p.domainsRated < 4);
+  const unrated = sorted.filter((p) => p.score === null);
+  const ordered = [...ranked, ...partial, ...unrated];
+
   let output = `TRYOUT EVALUATION SUMMARY
 ========================
 Date: ${date}
@@ -19,7 +26,7 @@ Players: ${session.playerCount}
 ───────────────────────────────────────────
 `;
 
-  for (const { player, domains, score } of sorted) {
+  for (const { player, domains, score, domainsRated } of ordered) {
     const eff = domains.effort ?? '-';
     const coa = domains.coachable ?? '-';
     const bal = domains.ballSkills ?? '-';
@@ -27,10 +34,11 @@ Players: ${session.playerCount}
     const fin = domains.finishing ?? '-';
     const tem = domains.teammate ?? '-';
     const scoreStr = score !== null ? `${score}%` : 'N/A';
-    
-    output += `${String(player).padStart(2)}    ${eff}    ${coa}    ${bal}    ${ftw}    ${fin}    ${tem}     ${scoreStr}\n`;
+    const flag = score !== null && domainsRated < 4 ? '  * rate more to rank' : score === null ? '  (not rated)' : '';
+
+    output += `${String(player).padStart(2)}    ${eff}    ${coa}    ${bal}    ${ftw}    ${fin}    ${tem}     ${scoreStr}${flag}\n`;
   }
-  
+
   output += `
 LEGEND
 ──────
@@ -42,6 +50,7 @@ FIN = Finishing
 TEM = Teammate
 
 RATINGS: 1=Needs Work, 2=OK, 3=Good, -=Skip
+* = rated on fewer than 4 of 6 domains; sorted below and not directly comparable.
 (Formal reports may use: Emerging/Developing/Proficient)
 
 ────────────────────────────────────────────
@@ -72,7 +81,14 @@ function escapeHtml(value) {
 }
 
 export function generatePrintableHTML(session, ratings) {
+  // Same fairness order as the screen: 4+ domains rank first, then partial, then unrated.
   const sorted = sortByScore(ratings);
+  const ranked = sorted.filter((p) => p.score !== null && p.domainsRated >= 4);
+  const partial = sorted.filter((p) => p.score !== null && p.domainsRated < 4);
+  const unrated = sorted.filter((p) => p.score === null);
+  const ordered = [...ranked, ...partial, ...unrated];
+  const rankOf = {};
+  ranked.forEach((p, i) => { rankOf[p.player] = i + 1; });
   const date = new Date(session.createdAt).toLocaleDateString('en-US', {
     year: 'numeric', month: 'long', day: 'numeric'
   });
@@ -80,9 +96,9 @@ export function generatePrintableHTML(session, ratings) {
 
   const getRatingColor = (rating) => {
     if (rating === null || rating === undefined) return '#999';
-    if (rating === 1) return '#FF3B30';
-    if (rating === 2) return '#FF9500';
-    return '#34C759';
+    if (rating === 1) return '#D70015';
+    if (rating === 2) return '#8A6D00';
+    return '#1A7F37';
   };
 
   const getRatingLabel = (rating) => {
@@ -101,15 +117,18 @@ export function generatePrintableHTML(session, ratings) {
     { id: 'teammate', name: 'Teammate' }
   ];
 
-  let playersHTML = sorted.map(({ player, domains: playerDomains, score, domainsRated }, index) => `
+  let playersHTML = ordered.map(({ player, domains: playerDomains, score, domainsRated }) => {
+    const rankNum = rankOf[player];
+    const statusLabel = score !== null && domainsRated < 4 ? ' &middot; rate more to rank' : score === null ? ' &middot; not rated' : '';
+    return `
     <div class="player-card">
       <div class="player-header">
-        <div class="rank">${score === null ? '-' : index + 1}</div>
+        <div class="rank">${rankNum ?? '-'}</div>
         <div class="player-info">
           <strong>Player #${player}</strong>
-          <span class="meta">${domainsRated}/6 domains rated</span>
+          <span class="meta">${domainsRated}/6 domains rated${statusLabel}</span>
         </div>
-        <div class="score" style="color: ${score === null ? '#999' : score >= 70 ? '#34C759' : score >= 50 ? '#FF9500' : '#FF3B30'}">
+        <div class="score" style="color: ${score === null ? '#999' : score >= 70 ? '#1A7F37' : score >= 50 ? '#8A6D00' : '#D70015'}">
           ${score !== null ? score + '%' : 'N/A'}
         </div>
       </div>
@@ -123,7 +142,8 @@ export function generatePrintableHTML(session, ratings) {
       </div>
       ${playerDomains.note ? `<div class="note">Note: ${escapeHtml(playerDomains.note)}</div>` : ''}
     </div>
-  `).join('');
+  `;
+  }).join('');
 
   return `<!DOCTYPE html>
 <html>
@@ -256,7 +276,7 @@ export function generatePrintableHTML(session, ratings) {
       <div class="label">Rated</div>
     </div>
     <div class="summary-item">
-      <div class="value">${sorted.length > 0 && sorted[0].score ? sorted[0].score + '%' : '-'}</div>
+      <div class="value">${ranked.length > 0 ? ranked[0].score + '%' : '-'}</div>
       <div class="label">Top Score</div>
     </div>
   </div>
