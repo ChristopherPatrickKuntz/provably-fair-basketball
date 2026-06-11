@@ -68,14 +68,16 @@ export function HomeScreen({ onStartTryout, onOpenHandbook, onResume, onStartHer
           {/* New-coach on-ramp */}
           <button
             onClick={onStartHere}
-            className="w-full text-left rounded-[var(--radius)] p-3.5 flex items-center gap-3 bg-[var(--bg-card)] border border-[var(--accent)]/30 shadow-[var(--shadow-card)] transition-all active:scale-[0.98]"
+            className="w-full text-left rounded-[var(--radius)] p-4 flex items-center gap-4 bg-[var(--bg-card)] border border-[var(--accent)]/30 shadow-[var(--shadow-card)] transition-all active:scale-[0.98]"
           >
-            <span className="text-[20px]" aria-hidden="true">👋</span>
+            <div className="w-12 h-12 rounded-[12px] bg-[var(--accent-light)] flex items-center justify-center text-2xl flex-shrink-0" aria-hidden="true">👋</div>
             <div className="flex-1">
-              <span className="text-[15px] font-semibold text-[var(--text-primary)]">New to coaching? Start here</span>
-              <p className="text-[12px] text-[var(--text-muted)]">A 5-step walkthrough, no experience needed.</p>
+              <span className="text-[17px] font-semibold text-[var(--text-primary)]">New to coaching? Start here</span>
+              <p className="text-[13px] text-[var(--text-muted)] mt-0.5">A 5-step walkthrough, no experience needed.</p>
             </div>
-            <span className="text-[var(--accent)] text-[17px]" aria-hidden="true">→</span>
+            <svg className="w-5 h-5 text-[var(--text-muted)] flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+            </svg>
           </button>
 
           {/* Primary: Tryout Tool */}

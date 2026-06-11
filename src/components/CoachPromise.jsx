@@ -12,7 +12,7 @@ export function CoachPromise({ onAccept, onBack }) {
       <div className="max-w-md w-full text-center space-y-8">
         {/* Title */}
         <div>
-          <h1 className="text-[28px] font-bold text-[#facc15] mb-2">
+          <h1 className="text-[28px] font-bold text-[#EAB308] mb-2">
             THE COACH'S PROMISE
           </h1>
           <p className="text-[15px] text-[#a1a1aa]">
@@ -53,7 +53,7 @@ export function CoachPromise({ onAccept, onBack }) {
         {/* Button */}
         <button
           onClick={onAccept}
-          className="w-full py-4 bg-[#facc15] text-[#0a0a0b] rounded-[14px] text-[17px] font-bold mt-4 hover:bg-[#fcd34d] transition-colors"
+          className="w-full py-4 bg-[#EAB308] text-[#0a0a0b] rounded-[14px] text-[17px] font-bold mt-4 hover:bg-[#F5C518] transition-colors"
         >
           I COMMIT TO THIS
         </button>
@@ -65,7 +65,7 @@ export function CoachPromise({ onAccept, onBack }) {
 function PromiseItem({ text }) {
   return (
     <div className="flex items-center gap-3">
-      <svg className="w-5 h-5 text-[#facc15] flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+      <svg className="w-5 h-5 text-[#EAB308] flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M5 13l4 4L19 7" />
       </svg>
       <span className="text-[15px] text-white">{text}</span>

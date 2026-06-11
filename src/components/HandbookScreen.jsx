@@ -34,10 +34,12 @@ export function HandbookScreen({ onBack, onOpen }) {
 
       <div className="flex-1 overflow-y-auto">
         <div className="max-w-md mx-auto px-5 py-6">
-          <p className="text-[14px] text-[var(--text-secondary)] mb-5 px-1">
-            Everything you need to plan and run the season. Use the tryout tool on the home
-            screen to evaluate players, this is the reference library.
-          </p>
+          <div className="bg-[var(--accent-light)] rounded-[var(--radius)] p-4 mb-5">
+            <p className="text-[14px] text-[var(--text-secondary)] leading-relaxed">
+              Everything you need to plan and run the season. Use the tryout tool on the home
+              screen to evaluate players, this is the reference library.
+            </p>
+          </div>
 
           <div className="space-y-3">
             {SECTIONS.map((section) => (

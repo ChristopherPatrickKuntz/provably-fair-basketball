@@ -26,9 +26,11 @@ export function ResourcesHubScreen({ onBack }) {
 
       <div className="flex-1 overflow-y-auto px-4 py-5">
         <div className="max-w-lg mx-auto space-y-3">
-          <p className="text-[14px] text-[var(--text-secondary)] px-1 mb-1">
-            The essentials, for quick lookup during tryouts and practice.
-          </p>
+          <div className="bg-[var(--accent-light)] rounded-[var(--radius)] p-4">
+            <p className="text-[14px] text-[var(--text-secondary)] leading-relaxed">
+              The essentials, for quick lookup during tryouts and practice.
+            </p>
+          </div>
 
           {/* How rating works - the core of the tool, open by default */}
           <ResourceCard

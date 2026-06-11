@@ -56,7 +56,7 @@ export function EvaluateScreen({ session, onUpdateRating, onUpdateNote, onComple
         title={session.name}
         subtitle={saveStatus === 'saved' ? 'Saved ✓' : saveStatus === 'saving' ? 'Saving...' : ''}
         leftAction={onBack}
-        leftLabel="← Back"
+        leftLabel="← Tryout"
         rightAction={handleComplete}
         rightLabel="DONE"
         rightVariant="primary"

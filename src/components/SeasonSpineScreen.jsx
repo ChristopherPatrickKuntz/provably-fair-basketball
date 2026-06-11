@@ -316,7 +316,7 @@ function PracticePlanView({ week, displayDates, onBack }) {
         title={week.name}
         subtitle={displayDates}
         leftAction={onBack}
-        leftLabel="← Back"
+        leftLabel="← Season"
         rightAction={practicePlan ? printPlan : undefined}
         rightLabel={practicePlan ? 'Print' : undefined}
       />

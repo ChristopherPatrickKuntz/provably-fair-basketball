@@ -69,9 +69,11 @@ export function NewCoachGuideScreen({ onBack }) {
       />
       <div className="flex-1 overflow-y-auto">
         <div className="max-w-md mx-auto px-5 py-6">
-          <p className="text-[14px] text-[var(--text-secondary)] mb-5 px-1">
-            Everything a new coach needs, one topic at a time. Start at the top, the rest is here when you want it.
-          </p>
+          <div className="bg-[var(--accent-light)] rounded-[var(--radius)] p-4 mb-5">
+            <p className="text-[14px] text-[var(--text-secondary)] leading-relaxed">
+              Everything a new coach needs, one topic at a time. Start at the top, the rest is here when you want it.
+            </p>
+          </div>
           <div className="space-y-3">
             {GUIDE_SECTIONS.map((s) => (
               <button
@@ -227,10 +229,10 @@ function LTADTab() {
               key={stage.id}
               onClick={() => setSelectedStage(stage.id)}
               aria-pressed={selectedStage === stage.id}
-              className={`px-3 py-2 rounded-[10px] text-[12px] font-medium whitespace-nowrap transition-all ${
+              className={`px-3 py-1.5 rounded-[10px] text-[13px] font-medium whitespace-nowrap transition-all ${
                 selectedStage === stage.id 
                   ? 'bg-[var(--accent)] text-white' 
-                  : 'bg-[var(--bg-card)] shadow-[var(--shadow-card)] text-[var(--text-secondary)]'
+                  : 'bg-[var(--bg-secondary)] text-[var(--text-secondary)]'
               }`}
             >
               {stage.name}
@@ -417,10 +419,10 @@ function ChecklistsTab() {
               key={key}
               onClick={() => setSelectedChecklist(key)}
               aria-pressed={selectedChecklist === key}
-              className={`px-3 py-2 rounded-[10px] text-[12px] font-medium whitespace-nowrap transition-all ${
+              className={`px-3 py-1.5 rounded-[10px] text-[13px] font-medium whitespace-nowrap transition-all ${
                 selectedChecklist === key 
                   ? 'bg-[var(--accent)] text-white' 
-                  : 'bg-[var(--bg-card)] shadow-[var(--shadow-card)] text-[var(--text-secondary)]'
+                  : 'bg-[var(--bg-secondary)] text-[var(--text-secondary)]'
               }`}
             >
               {list.title.replace(' Checklist', '')}

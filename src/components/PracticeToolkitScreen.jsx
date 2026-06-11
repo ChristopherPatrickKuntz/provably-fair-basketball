@@ -262,7 +262,7 @@ function DrillLibraryView({ selectedCategory, setSelectedCategory, selectedDrill
           <button
             onClick={() => setSelectedCategory(null)}
             aria-pressed={!selectedCategory}
-            className={`px-3 py-1.5 rounded-[8px] text-[13px] font-medium ${
+            className={`px-3 py-1.5 rounded-[10px] text-[13px] font-medium transition-all whitespace-nowrap ${
               !selectedCategory
                 ? 'bg-[var(--accent)] text-white' 
                 : 'bg-[var(--bg-secondary)] text-[var(--text-secondary)]'
@@ -275,7 +275,7 @@ function DrillLibraryView({ selectedCategory, setSelectedCategory, selectedDrill
               key={cat.id}
               onClick={() => setSelectedCategory(cat.id)}
               aria-pressed={selectedCategory === cat.id}
-              className={`px-3 py-1.5 rounded-[8px] text-[13px] font-medium ${
+              className={`px-3 py-1.5 rounded-[10px] text-[13px] font-medium transition-all whitespace-nowrap ${
                 selectedCategory === cat.id
                   ? 'bg-[var(--accent)] text-white' 
                   : 'bg-[var(--bg-secondary)] text-[var(--text-secondary)]'
