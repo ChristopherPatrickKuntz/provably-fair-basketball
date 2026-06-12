@@ -3,9 +3,10 @@ import { GRADE_BANDS, PLAYER_COUNTS } from '../data/domains';
 import { Header } from './Header';
 import { PRINT_ATTENDANCE_SHEET } from '../data/coachingResources';
 
-export function SetupScreen({ sessions, onStartSession, onContinueSession, onDeleteSession, onBack }) {
+export function SetupScreen({ sessions, onStartSession, onContinueSession, onDeleteSession, onCompare, onBack }) {
   const [gradeBand, setGradeBand] = useState('middle');
   const [playerCount, setPlayerCount] = useState(12);
+  const [customCount, setCustomCount] = useState(false);
 
   const sortedSessions = Object.values(sessions || {})
     .sort((a, b) => new Date(b.updatedAt) - new Date(a.updatedAt));
@@ -14,7 +15,8 @@ export function SetupScreen({ sessions, onStartSession, onContinueSession, onDel
   const completedSessions = sortedSessions.filter(s => s.status === 'completed');
 
   const handleStart = () => {
-    onStartSession(gradeBand, playerCount);
+    const count = Math.min(40, Math.max(4, parseInt(playerCount, 10) || 12));
+    onStartSession(gradeBand, count);
   };
 
   return (
@@ -154,11 +156,11 @@ export function SetupScreen({ sessions, onStartSession, onContinueSession, onDel
                   {PLAYER_COUNTS.map(count => (
                     <button
                       key={count}
-                      onClick={() => setPlayerCount(count)}
-                      aria-pressed={playerCount === count}
+                      onClick={() => { setPlayerCount(count); setCustomCount(false); }}
+                      aria-pressed={!customCount && playerCount === count}
                       aria-label={`${count} players`}
                       className={`min-w-[52px] py-3 px-4 rounded-[10px] text-[15px] font-semibold transition-all ${
-                        playerCount === count
+                        !customCount && playerCount === count
                           ? 'bg-[var(--accent)] text-white'
                           : 'bg-[var(--bg-secondary)] text-[var(--text-primary)]'
                       }`}
@@ -166,7 +168,34 @@ export function SetupScreen({ sessions, onStartSession, onContinueSession, onDel
                       {count}
                     </button>
                   ))}
+                  <button
+                    onClick={() => setCustomCount(true)}
+                    aria-pressed={customCount}
+                    className={`py-3 px-4 rounded-[10px] text-[15px] font-semibold transition-all ${
+                      customCount
+                        ? 'bg-[var(--accent)] text-white'
+                        : 'bg-[var(--bg-secondary)] text-[var(--text-primary)]'
+                    }`}
+                  >
+                    Custom
+                  </button>
                 </div>
+                {customCount && (
+                  <div className="flex items-center gap-3 mt-3">
+                    <label htmlFor="custom-player-count" className="text-[13px] text-[var(--text-secondary)]">
+                      How many players? (4 to 40)
+                    </label>
+                    <input
+                      id="custom-player-count"
+                      type="number"
+                      min={4}
+                      max={40}
+                      value={playerCount}
+                      onChange={(e) => setPlayerCount(e.target.value)}
+                      className="w-20 bg-[var(--bg-secondary)] rounded-[10px] px-3 py-2 text-[15px] font-semibold text-[var(--text-primary)] border-none outline-none text-center"
+                    />
+                  </div>
+                )}
               </div>
             </div>
 
@@ -189,15 +218,25 @@ export function SetupScreen({ sessions, onStartSession, onContinueSession, onDel
               </h3>
               <div className="bg-[var(--bg-card)] rounded-[var(--radius)] shadow-[var(--shadow-card)] overflow-hidden divide-y divide-[var(--bg-secondary)]">
                 {completedSessions.slice(0, 5).map(session => (
-                  <SessionRow 
-                    key={session.id} 
-                    session={session} 
+                  <SessionRow
+                    key={session.id}
+                    session={session}
                     onTap={() => onContinueSession(session.id)}
                     onDelete={onDeleteSession}
                   />
                 ))}
               </div>
             </div>
+          )}
+
+          {/* Compare two sessions (e.g. day 1 vs day 2 of the same tryout) */}
+          {sortedSessions.length >= 2 && onCompare && (
+            <button
+              onClick={onCompare}
+              className="w-full mt-3 py-3 bg-[var(--bg-card)] border border-[var(--accent)]/30 shadow-[var(--shadow-card)] text-[var(--accent)] rounded-[var(--radius)] text-[14px] font-medium active:scale-[0.98] transition-transform"
+            >
+              Compare two tryouts (day 1 vs day 2)
+            </button>
           )}
 
           {/* First Time Tip */}

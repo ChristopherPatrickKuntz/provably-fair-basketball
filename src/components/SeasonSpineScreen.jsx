@@ -85,6 +85,30 @@ export function SeasonSpineScreen({ onBack, season, onUpdateSeason, customPlans 
     );
   }
 
+  // One-page season overview for the fridge or the team binder.
+  const printSeasonOverview = () => {
+    const win = window.open('', '_blank');
+    if (!win) {
+      alert('Your browser blocked the print window. Allow pop-ups for this site to print.');
+      return;
+    }
+    const esc = (s) => String(s ?? '').replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+    const cell = 'padding:6px 10px;border-bottom:1px solid #E5E5EA;vertical-align:top';
+    const rows = items
+      .map((item) =>
+        item.kind === 'break'
+          ? `<tr><td style="${cell};white-space:nowrap;color:#888">${start ? esc(formatSpan(start, item.index, item.weeks)) : ''}</td><td style="${cell};color:#888;font-style:italic">Mid-Season Break (${item.weeks} week${item.weeks === 1 ? '' : 's'})</td></tr>`
+          : `<tr><td style="${cell};white-space:nowrap;font-weight:600;color:#007AFF">${start ? esc(formatWeekRange(start, item.index)) : ''}</td><td style="${cell}"><strong>${esc(item.week.name)}</strong><br><span style="color:#555;font-size:12px">"${esc(item.week.language)}"</span></td></tr>`
+      )
+      .join('');
+    win.document.write(
+      `<!DOCTYPE html><html><head><meta charset="UTF-8"><title>Season Overview</title></head><body style="font-family:-apple-system,BlinkMacSystemFont,sans-serif;max-width:680px;margin:0 auto;padding:24px;color:#1D1D1F"><h1 style="font-size:20px;color:#007AFF;margin:0 0 4px">Season Overview</h1><p style="color:#666;margin:0 0 16px">${season.weeks} weeks of practice${start ? ` &middot; ends ${esc(formatWeekRange(start, endIndex))}` : ''}</p><table style="width:100%;border-collapse:collapse;font-size:13px">${rows}</table><p style="margin-top:16px;color:#999;font-size:11px">Tap any week in the app for its full practice plan. Provably Fair Basketball &middot; cpk.solutions</p></body></html>`
+    );
+    win.document.close();
+    win.focus();
+    setTimeout(() => win.print(), 250);
+  };
+
   return (
     <div className="min-h-screen bg-[var(--bg-page)] flex flex-col">
       <Header
@@ -137,6 +161,13 @@ export function SeasonSpineScreen({ onBack, season, onUpdateSeason, customPlans 
             </p>
             <p className="text-[12px] text-white/75 mt-1">Playoffs or final games usually follow.</p>
           </div>
+
+          <button
+            onClick={printSeasonOverview}
+            className="w-full mt-3 py-3 bg-[var(--bg-card)] shadow-[var(--shadow-card)] text-[var(--accent)] rounded-[var(--radius)] text-[14px] font-medium active:scale-[0.98] transition-transform"
+          >
+            🖨️ Print season overview
+          </button>
         </div>
       </div>
 

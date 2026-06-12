@@ -22,6 +22,10 @@ Provably Fair Basketball is a free web app for youth basketball coaches (middle 
 - [Start Here](https://provablyfairbasketball.com/start): Guided path for new coaches
 - [Tryout Evaluation](https://provablyfairbasketball.com/tryout): The fair tryout scoring tool
 - [Coaching Handbook](https://provablyfairbasketball.com/handbook): Season plan, practices, drills, full guide
+- [Season Plan](https://provablyfairbasketball.com/handbook/season): Customizable week-by-week curriculum for any calendar
+- [Practice Toolkit](https://provablyfairbasketball.com/handbook/practice): 90-minute template, drill library, quick sessions, and the plan builder
+- [New Coach's Guide](https://provablyfairbasketball.com/handbook/guide): Mindset, basketball basics, development by age, parent emails, checklists
+- [Quick Reference](https://provablyfairbasketball.com/handbook/reference): Rating system, what to teach in order, privacy, FAQ
 
 ## Notes
 

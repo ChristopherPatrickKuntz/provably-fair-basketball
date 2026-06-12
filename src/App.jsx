@@ -9,6 +9,7 @@ import { CoachPromise } from './components/CoachPromise';
 import { SetupScreen } from './components/SetupScreen';
 import { EvaluateScreen } from './components/EvaluateScreen';
 import { ResultsScreen } from './components/ResultsScreen';
+import { CompareScreen } from './components/CompareScreen';
 // Lazy-load the content-heavy Handbook screens (and their large data files) so the
 // tryout tool and home screen load instantly. They split into separate chunks.
 const SeasonSpineScreen = lazy(() => import('./components/SeasonSpineScreen').then((m) => ({ default: m.SeasonSpineScreen })));
@@ -24,6 +25,7 @@ const ROUTE_TITLES = {
   '/tryout': 'Fair Tryout Evaluation Tool | Provably Fair Basketball',
   '/tryout/evaluate': 'Tryout Evaluation | Provably Fair Basketball',
   '/tryout/results': 'Tryout Results | Provably Fair Basketball',
+  '/tryout/compare': 'Compare Tryouts | Provably Fair Basketball',
   '/handbook': 'Coaching Handbook | Provably Fair Basketball',
   '/handbook/season': 'Customizable Season Plan | Provably Fair Basketball',
   '/handbook/practice': 'Practice Toolkit and Drill Library | Provably Fair Basketball',
@@ -45,6 +47,7 @@ function App() {
     savePlan,
     deletePlan,
     assignWeekPlan,
+    addPlayerToSession,
     activeSession,
     acceptPromise,
     startSession,
@@ -137,6 +140,7 @@ function App() {
                 navigate(sessions[id]?.status === 'completed' ? '/tryout/results' : '/tryout/evaluate');
               }}
               onDeleteSession={deleteSession}
+              onCompare={() => navigate('/tryout/compare')}
               onBack={() => navigate('/')}
             />
           ) : (
@@ -144,6 +148,18 @@ function App() {
               onAccept={acceptPromise}
               onBack={() => navigate('/')}
             />
+          )
+        }
+      />
+
+      {/* Compare two tryout sessions (e.g. day 1 vs day 2) */}
+      <Route
+        path="/tryout/compare"
+        element={
+          state.promiseAccepted ? (
+            <CompareScreen sessions={sessions} onBack={() => navigate('/tryout')} />
+          ) : (
+            <Navigate to="/tryout" replace />
           )
         }
       />
@@ -158,6 +174,7 @@ function App() {
               saveStatus={saveStatus}
               onUpdateRating={updateRating}
               onUpdateNote={updateNote}
+              onAddPlayer={addPlayerToSession}
               onComplete={() => {
                 completeSession();
                 navigate('/tryout/results');

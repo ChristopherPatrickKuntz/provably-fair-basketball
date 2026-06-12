@@ -4,7 +4,7 @@ import { calculateScore, getDomainsRated } from '../utils/scoring';
 import { RatingSegmentedControl } from './SegmentedControl';
 import { Header } from './Header';
 
-export function EvaluateScreen({ session, onUpdateRating, onUpdateNote, onComplete, onBack, saveStatus }) {
+export function EvaluateScreen({ session, onUpdateRating, onUpdateNote, onAddPlayer, onComplete, onBack, saveStatus }) {
   const [selectedPlayer, setSelectedPlayer] = useState(1);
   const [expandedDomain, setExpandedDomain] = useState(null);
   const scrollRef = useRef(null);
@@ -94,6 +94,17 @@ export function EvaluateScreen({ session, onUpdateRating, onUpdateNote, onComple
           <div className="text-center mt-3 text-[13px] text-[var(--text-muted)]">
             {getRatedCount()} of {session.playerCount} players rated
           </div>
+          {/* A kid shows up late: add a jersey number without restarting */}
+          {onAddPlayer && session.playerCount < 40 && (
+            <div className="text-center mt-1">
+              <button
+                onClick={() => { onAddPlayer(); setSelectedPlayer(session.playerCount + 1); }}
+                className="text-[13px] text-[var(--accent)] font-medium py-1"
+              >
+                + Add player {session.playerCount + 1}
+              </button>
+            </div>
+          )}
         </div>
       </div>
 

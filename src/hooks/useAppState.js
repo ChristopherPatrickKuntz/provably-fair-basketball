@@ -186,6 +186,30 @@ export function useAppState() {
     save({ ...state, customPlans: remainingPlans, weekPlans });
   }, [state, save]);
 
+  // A kid shows up mid-tryout: append one more jersey number to the active
+  // session. Capped well above any real tryout size.
+  const addPlayerToSession = useCallback(() => {
+    if (!state || !state.activeSessionId) return;
+    const session = state.sessions[state.activeSessionId];
+    if (!session || session.playerCount >= 40) return;
+    const newId = session.playerCount + 1;
+    save({
+      ...state,
+      sessions: {
+        ...state.sessions,
+        [session.id]: {
+          ...session,
+          playerCount: newId,
+          updatedAt: new Date().toISOString(),
+          ratings: {
+            ...session.ratings,
+            [newId]: { effort: null, coachable: null, ballSkills: null, footwork: null, finishing: null, teammate: null, note: '' }
+          }
+        }
+      }
+    });
+  }, [state, save]);
+
   const assignWeekPlan = useCallback((weekId, planId) => {
     if (!state) return;
     const weekPlans = { ...(state.weekPlans || {}) };
@@ -209,6 +233,7 @@ export function useAppState() {
     savePlan,
     deletePlan,
     assignWeekPlan,
+    addPlayerToSession,
     activeSession,
     acceptPromise,
     startSession,
