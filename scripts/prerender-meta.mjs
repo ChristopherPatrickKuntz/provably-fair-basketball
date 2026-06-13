@@ -261,7 +261,7 @@ const ROUTES = [
 ];
 
 const STATIC_STYLE =
-  '<style>#root .pfb-static{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;max-width:720px;margin:0 auto;padding:32px 20px;color:#1D1D1F;line-height:1.55}#root .pfb-static h1{font-size:24px;margin:0 0 10px}#root .pfb-static h2{font-size:18px;margin:24px 0 8px}#root .pfb-static h3{font-size:15px;margin:16px 0 4px}#root .pfb-static p{font-size:14px;color:#3a3a3c;margin:0 0 10px}#root .pfb-static li{font-size:14px;color:#3a3a3c;margin:0 0 4px}#root .pfb-static a{color:#007AFF}</style>';
+  '<style>#root .pfb-static{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;max-width:720px;margin:0 auto;padding:32px 20px;color:#1D1D1F;line-height:1.55}#root .pfb-static h1{font-size:24px;margin:0 0 10px}#root .pfb-static h2{font-size:18px;margin:24px 0 8px}#root .pfb-static h3{font-size:15px;margin:16px 0 4px}#root .pfb-static p{font-size:14px;color:#3a3a3c;margin:0 0 10px}#root .pfb-static li{font-size:14px;color:#3a3a3c;margin:0 0 4px}#root .pfb-static a{color:#0062C9}</style>';
 
 const staticBlock = (h1, blurb, contentHtml = '') =>
   `<div id="root">${STATIC_STYLE}<div class="pfb-static"><h1>${esc(h1)}</h1><p>${esc(blurb)}</p>${contentHtml}<p style="color:#888;font-size:12px;margin-top:28px">This is the text overview. The interactive app loads in any modern browser, works offline, and keeps all data on your device.</p></div></div>`;

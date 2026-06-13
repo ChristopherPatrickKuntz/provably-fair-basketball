@@ -84,6 +84,7 @@ function App() {
           </div>
         }
       >
+      <main>
       <Routes>
       {/* Home - tool-first, two front doors */}
       <Route
@@ -248,6 +249,7 @@ function App() {
       {/* Unknown → home */}
       <Route path="*" element={<Navigate to="/" replace />} />
       </Routes>
+      </main>
       </Suspense>
     </>
   );
